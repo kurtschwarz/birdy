@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package collector.v1;
 
 message Recorder {
@@ -8,9 +10,16 @@ message Recorder {
   string long = 3;
 }
 
+message Recording {
+  string id = 1;
+  google.protobuf.Timestamp startTime = 2;
+  google.protobuf.Timestamp endTime = 3;
+  bytes buffer = 4;
+}
+
 message CollectRequest {
   Recorder recorder = 1;
-  bytes buffer = 2;
+  Recording recording = 2;
 }
 
 message CollectResponse {

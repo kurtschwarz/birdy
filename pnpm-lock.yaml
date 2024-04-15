@@ -57,6 +57,9 @@ importers:
       '@birdy/protos':
         specifier: workspace:^0.0.0
         version: link:../../packages/protos
+      '@bufbuild/protobuf':
+        specifier: ^1.8.0
+        version: 1.8.0
       '@connectrpc/connect':
         specifier: ^1.4.0
         version: 1.4.0(@bufbuild/protobuf@1.8.0)

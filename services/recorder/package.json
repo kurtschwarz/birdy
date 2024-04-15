@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@birdy/protos": "workspace:^0.0.0",
+    "@bufbuild/protobuf": "^1.8.0",
     "@connectrpc/connect": "^1.4.0",
     "@connectrpc/connect-node": "^1.4.0",
     "dayjs": "^1.11.10",

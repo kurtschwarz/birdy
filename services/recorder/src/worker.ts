@@ -1,6 +1,7 @@
 import { isMainThread, parentPort, Worker, SHARE_ENV } from 'node:worker_threads'
 import fastq, { queueAsPromised } from 'fastq'
 import NodeCache from 'node-cache'
+import { Timestamp } from '@bufbuild/protobuf'
 
 import type { Recording } from './types/index.js'
 import { config, logger } from './utils/index.js'
@@ -66,8 +67,15 @@ async function worker(): Promise<void> {
             const chunkSize = config.transferChunkSize
             for (let i = 0; i < recording.buffer.length; i += chunkSize) {
               yield {
-                ...i === 0 ? { recorder: { id: recording.id } } : {},
-                buffer: recording.buffer.subarray(i, i + chunkSize)
+                recorder: {
+                  id: recording.id
+                },
+                recording: {
+                  id: recording.id,
+                  startTime: Timestamp.fromDate(recording.startTime),
+                  endTime: Timestamp.fromDate(recording.endTime),
+                  buffer: recording.buffer.subarray(i, i + chunkSize)
+                }
               }
             }
           })(recordingId)

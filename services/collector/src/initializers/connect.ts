@@ -10,7 +10,7 @@ export const initializeConnect = async (): Promise<(router: ConnectRouter) => Co
       async collect (requests) {
         const buffers = []
         for await (const request of requests) {
-          buffers.push(request.buffer)
+          buffers.push(request.recording.buffer)
         }
 
         await storeRecording(
