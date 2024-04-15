@@ -4,6 +4,7 @@ import NodeCache from 'node-cache'
 
 import type { Recording } from './types/index.js'
 import { collectorService } from './services/collector/index.js'
+import { config } from './utils/config.js'
 
 let instance: Worker
 let cache: NodeCache
@@ -51,14 +52,14 @@ async function worker(): Promise<void> {
     queue = fastq.promise(
       async ({ recordingId, attempt }): Promise<void> => {
         if (attempt > 0) {
-          const delay = 200 * Math.pow(2, attempt)
-          await new Promise(resolve => setTimeout(resolve, Math.min(delay, 1500)))
+          const delay = config.workerQueueRetryDelay * Math.pow(2, attempt)
+          await new Promise(resolve => setTimeout(resolve, Math.min(delay, config.workerQueueRetryDelayMax)))
         }
 
         await collectorService.collect(
           (async function* (recordingId) {
             const recording = cache.get(recordingId) as Recording
-            const chunkSize = 512000 // 512kb
+            const chunkSize = config.transferChunkSize
             for (let i = 0; i < recording.buffer.length; i += chunkSize) {
               yield {
                 ...i === 0 ? { recorder: { id: recording.id } } : {},
@@ -72,7 +73,7 @@ async function worker(): Promise<void> {
     )
 
     queue.error((error, { recordingId, attempt }) => {
-      if (error && attempt <= 5) {
+      if (error && attempt <= config.workerQueueRetryAttemptsMax) {
         queue.unshift({ recordingId, attempt: attempt + 1 })
       }
     })
