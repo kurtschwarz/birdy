@@ -1,0 +1,19 @@
+{
+  "name": "@birdy/megarepo",
+  "private": true,
+  "homepage": "https://github.com/kurtschwarz/birdy#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kurtschwarz/birdy.git"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm"
+  },
+  "devDependencies": {
+    "pnpm": "^8.15.6"
+  },
+  "engines": {
+    "node": ">=21",
+    "pnpm": ">=8"
+  }
+}

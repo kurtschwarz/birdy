@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package collector.v1;
+
+message Recorder {
+  string id = 1;
+  string lat = 2;
+  string long = 3;
+}
+
+message CollectRequest {
+  Recorder recorder = 1;
+  bytes buffer = 2;
+}
+
+message CollectResponse {
+  bool ok = 1;
+}
+
+service CollectorService {
+  rpc Collect (stream CollectRequest) returns (CollectResponse) {}
+}

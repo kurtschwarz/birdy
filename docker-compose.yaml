@@ -1,0 +1,91 @@
+version: '3.5'
+
+x-minio-image: &minio-service
+  image: quay.io/minio/minio:RELEASE.2024-04-06T05-26-02Z@sha256:178e05aba3a0dc967df3558aab43097f1427bbcda77264fc24e92f1bf09dfe02
+
+x-minio-env: &minio-env
+  MINIO_ENDPOINT: minio.service.docker
+  MINIO_PORT: 9000
+  MINIO_ROOT_USER: birdy
+  MINIO_ROOT_PASSWORD: birdy123!
+
+x-node-env: &node-env
+  NODE_ENV: development
+
+services:
+  minio:
+    <<: *minio-service
+    ports:
+      - 127.0.0.1:9000:9000/tcp
+      - 127.0.0.1:9001:9001/tcp
+    command: |
+      server /data --console-address ":9001"
+    environment:
+      <<: *minio-env
+    networks:
+      birdy-net:
+        aliases:
+          - minio.service.docker
+    restart: always
+
+  minio-init:
+    <<: *minio-service
+    entrypoint: /bin/sh
+    command: |
+      -c '
+        /usr/bin/mc alias set birdy http://$$MINIO_ENDPOINT:$$MINIO_PORT $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD
+        /usr/bin/mc mb --ignore-existing birdy/birdy-recordings-unprocessed
+        /usr/bin/mc mb --ignore-existing birdy/birdy-recordings-processed
+      '
+    environment:
+      <<: *minio-env
+    networks:
+      birdy-net:
+        aliases:
+          - minio-init.service.docker
+    depends_on:
+      - minio
+    restart: on-failure
+
+  collector:
+    build:
+      target: dev
+      context: ./
+      dockerfile: ./services/collector/Dockerfile
+    environment:
+      <<: [*minio-env, *node-env]
+    volumes:
+      - ./services/collector/src/:/birdy/services/collector/src/
+    ports:
+      - 127.0.0.1:3000:3000/tcp
+    networks:
+      birdy-net:
+        aliases:
+          - collector.service.docker
+    depends_on:
+      - minio
+    restart: always
+
+  recorder:
+    build:
+      target: dev
+      context: ./
+      dockerfile: ./services/recorder/Dockerfile
+    environment:
+      <<: *node-env
+      COLLECTOR_SERVICE_ENDPOINT: http://collector.service.docker:3000
+    volumes:
+      - ./services/recorder/src/:/birdy/services/recorder/src/
+      - type: tmpfs
+        target: /birdy/services/recorder/data
+    networks:
+      birdy-net:
+        aliases:
+          - recorder.service.docker
+    depends_on:
+      - collector
+    restart: always
+
+networks:
+  birdy-net:
+    driver: bridge

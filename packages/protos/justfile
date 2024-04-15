@@ -1,0 +1,24 @@
+#!/usr/bin/env just --justfile
+
+set shell := ["bash", "-exuo", "pipefail", "-c"]
+set export := true
+set dotenv-load := false
+set positional-arguments := true
+
+toolchain := "docker"
+
+docker-bin  := `which docker ||:`
+docker-args := ""
+docker      := docker-bin + " " + docker-args
+
+compile:
+  #!/usr/bin/env bash
+  set -exuo pipefail
+
+  rm -rf ./gen ||:
+  {{docker}} build --progress=plain -t birdy/protos:latest .
+  {{docker}} run -it --rm \
+    --volume "$(pwd):/workspace" \
+    --workdir /workspace \
+    birdy/protos:latest \
+      generate
