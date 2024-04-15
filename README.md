@@ -2,27 +2,27 @@
 
 Birdy consists of a few independantly scaleable services:
 
-### [`@birdy/recorder`](./services/recorder)
+#### [`@birdy/recorder`](./services/recorder)
 
 The `@birdy/recorder` service is reponsible for collecting audio from a single microphone in a specific location.
 
 You should deploy as many `@birdy/recorder` services as you need.
 
-### [`@birdy/collector`](./services/collector)
+#### [`@birdy/collector`](./services/collector)
 
 The `@birdy/collector` service is responsible for gathering the raw recordings produced by the `@birdy/recorder` services and storing them in [Minio](https://min.io/).
 
 You should only need to deploy a single `@birdy/collector` instance.
 
-### [`@birdy/analyzer`](./services/analyzer)
+#### [`@birdy/analyzer`](./services/analyzer)
 
 This is a future machine learning service that will use [BirdNET](https://github.com/kahst/BirdNET-Analyzer) to identify birds via the recordings recorded by `@birdy/recorder` and collected by `@birdy/collector`.
 
-### [`@birdy/api`](./services/api)
+#### [`@birdy/api`](./services/api)
 
 This is a future api to interact with the Birdy data.
 
-### [`@birdy/app`](./services/app)
+#### [`@birdy/app`](./services/app)
 
 This is a future web ui/app to view the data collected by Birdy.
 
