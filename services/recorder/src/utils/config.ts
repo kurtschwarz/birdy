@@ -25,6 +25,10 @@ class Config {
         number: true,
         default: 10
       })
+      .option('log-level', {
+        string: true,
+        default: 'info'
+      })
       .parseSync()
   }
 
@@ -46,6 +50,10 @@ class Config {
 
   get workerQueueRetryAttemptsMax(): number {
     return this.argv.workerQueueRetryAttemptsMax
+  }
+
+  get logLevel(): string {
+    return this.argv.logLevel
   }
 }
 

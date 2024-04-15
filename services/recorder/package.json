@@ -16,10 +16,12 @@
     "fastq": "^1.17.1",
     "nanoid": "^5.0.7",
     "node-cache": "^5.1.2",
+    "pino": "^8.20.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
+    "pino-pretty": "^11.0.0",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5"
   }

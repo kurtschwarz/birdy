@@ -3,14 +3,16 @@ import fastq, { queueAsPromised } from 'fastq'
 import NodeCache from 'node-cache'
 
 import type { Recording } from './types/index.js'
+import { config, logger } from './utils/index.js'
 import { collectorService } from './services/collector/index.js'
-import { config } from './utils/config.js'
 
 let instance: Worker
 let cache: NodeCache
 let queue: queueAsPromised<{ recordingId: string; attempt: number }>
 
 export const start = async (): Promise<void> => {
+  logger.info('starting background worker')
+
   try {
     if (isMainThread) {
       if (instance) {
@@ -45,6 +47,8 @@ export const enqueue = async (recording: Recording): Promise<void> => {
 
 async function worker(): Promise<void> {
   if (!isMainThread) {
+    logger.info('background worker ready')
+
     cache = new NodeCache({
       useClones: true
     })
