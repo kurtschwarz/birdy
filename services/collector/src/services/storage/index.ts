@@ -9,11 +9,12 @@ const minio = new Client({
 })
 
 export const storeRecording = async (
-  bytes: Buffer
+  id: string,
+  buffer: Buffer
 ): Promise<void> => {
   await minio.putObject(
     'birdy-recordings-unprocessed',
-    'test-recording.wav',
-    bytes
+    `${id}.wav`,
+    buffer
   )
 }

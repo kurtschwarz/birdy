@@ -51,7 +51,7 @@ async function worker(): Promise<void> {
     logger.info('background worker ready')
 
     cache = new NodeCache({
-      useClones: true
+      useClones: false
     })
 
     queue = fastq.promise(
@@ -60,6 +60,8 @@ async function worker(): Promise<void> {
           const delay = config.workerQueueRetryDelay * Math.pow(2, attempt)
           await new Promise(resolve => setTimeout(resolve, Math.min(delay, config.workerQueueRetryDelayMax)))
         }
+
+        logger.info({ recordingId, attempt }, 'processing recording')
 
         await collectorService.collect(
           (async function* (recordingId) {

@@ -8,14 +8,24 @@ export const initializeConnect = async (): Promise<(router: ConnectRouter) => Co
   return (router: ConnectRouter): ConnectRouter => {
     return router.service(CollectorService, {
       async collect (requests) {
-        const buffers = []
+        let recordings = {}
+
         for await (const request of requests) {
-          buffers.push(request.recording.buffer)
+          recordings[request.recording.id] = {
+            id: request.recording.id,
+            buffers: [
+              ...(recordings?.[request.recording.id]?.buffers || []),
+              request.recording.buffer,
+            ]
+          }
         }
 
-        await storeRecording(
-          Buffer.concat(buffers)
-        )
+        for (const recordingId of Object.keys(recordings)) {
+          await storeRecording(
+            recordingId,
+            Buffer.concat(recordings[recordingId].buffers)
+          )
+        }
 
         return {
           ok: true
