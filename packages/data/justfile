@@ -1,0 +1,12 @@
+#!/usr/bin/env just --justfile
+
+set shell := ["bash", "-exuo", "pipefail", "-c"]
+set export := true
+set dotenv-load := false
+set positional-arguments := true
+
+build:
+  #!/usr/bin/env bash
+  set -exuo pipefail
+
+  pnpm exec prisma generate

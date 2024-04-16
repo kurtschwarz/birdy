@@ -25,6 +25,7 @@ build *argv:
   #!/usr/bin/env bash
   set -exuo pipefail
 
+  just ./packages/data/build
   just ./packages/protos/compile
 
   {{compose}} build {{argv}}
