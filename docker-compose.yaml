@@ -80,8 +80,10 @@ services:
         --worker-queue-retry-attempts-max 10
     environment:
       <<: *node-env
+      DATABASE_URL: file:/birdy/data/birdy.db
       COLLECTOR_SERVICE_ENDPOINT: http://collector.service.docker:3000
     volumes:
+      - ./data/birdy.db:/birdy/data/birdy.db
       - ./services/recorder/src/:/birdy/services/recorder/src/
       - type: tmpfs
         target: /birdy/services/recorder/data

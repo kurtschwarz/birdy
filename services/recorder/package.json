@@ -7,10 +7,12 @@
     "dev": "pnpm exec tsx watch --inspect=0.0.0.0:9229 ./src/main.ts"
   },
   "dependencies": {
+    "@birdy/data": "workspace:^0.0.0",
     "@birdy/protos": "workspace:^0.0.0",
     "@bufbuild/protobuf": "^1.8.0",
     "@connectrpc/connect": "^1.4.0",
     "@connectrpc/connect-node": "^1.4.0",
+    "@prisma/client": "^5.12.1",
     "dayjs": "^1.11.10",
     "esbuild": "^0.20.2",
     "exponential-backoff": "^3.1.1",

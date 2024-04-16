@@ -1,6 +1,7 @@
 import * as process from 'node:process'
 
 import './initializers/dayjs.js'
+import { client } from './initializers/prisma.js'
 import { config, logger } from './utils/index.js'
 import * as audio from './services/audio/index.js'
 import * as worker from './worker.js'

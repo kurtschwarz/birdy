@@ -8,5 +8,7 @@ datasource db {
 }
 
 model Recorder {
-  id String @id
+  id   String  @id @default(uuid())
+
+  @@map("recorders")
 }
