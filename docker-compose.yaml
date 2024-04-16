@@ -84,6 +84,7 @@ services:
       COLLECTOR_SERVICE_ENDPOINT: http://collector.service.docker:3000
     volumes:
       - ./data/birdy.db:/birdy/data/birdy.db
+      - ./packages/data/prisma/:/birdy/packages/data/prisma/
       - ./services/recorder/src/:/birdy/services/recorder/src/
       - type: tmpfs
         target: /birdy/services/recorder/data

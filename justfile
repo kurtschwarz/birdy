@@ -45,3 +45,18 @@ migrate *services='recorder':
       birdy-${_service}-1 \
         pnpm exec prisma migrate deploy
   done
+
+create type service='recorder' *args='':
+  #!/usr/bin/env bash
+  set -exuo pipefail
+
+  if [[ "{{type}}" = migration ]] ; then
+    {{docker}} exec -it --workdir /birdy/packages/data/ \
+      birdy-{{service}}-1 \
+        pnpm exec prisma migrate dev {{args}}
+  fi
+
+# Local Variables:
+# mode: makefile
+# End:
+# vim: set ft=make :
