@@ -35,3 +35,13 @@ dev *argv:
   set -exuo pipefail
 
   {{compose}} up {{argv}}
+
+migrate *services='recorder':
+  #!/usr/bin/env bash
+  set -exuo pipefail
+
+  for _service in {{services}} ; do
+    {{docker}} exec -it --workdir /birdy/packages/data/ \
+      birdy-${_service}-1 \
+        pnpm exec prisma migrate deploy
+  done
