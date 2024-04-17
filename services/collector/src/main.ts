@@ -5,6 +5,8 @@ import { initializeFastify } from './initializers/fastify.js'
 import { initializeConnect } from './initializers/connect.js'
 
 async function main(): Promise<void> {
+  console.log({ config })
+
   const connectRoutes = await initializeConnect()
   const server = await initializeFastify(connectRoutes)
   await server.listen({

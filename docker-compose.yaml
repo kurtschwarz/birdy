@@ -53,14 +53,11 @@ services:
       context: ./
       dockerfile: ./services/collector/Dockerfile
     command: >
-      pnpm run dev --
-        --port 3000
+      pnpm run dev
     environment:
       <<: [*minio-env, *node-env]
     volumes:
       - ./services/collector/src/:/birdy/services/collector/src/
-      # uncomment line below to use .config.json instead of cli arguments
-      # - ./services/collector/.config.json:/birdy/services/collector/.config.json
     ports:
       - 127.0.0.1:3000:3000/tcp
     networks:
@@ -95,8 +92,6 @@ services:
       - ./data/birdy.db:/birdy/data/birdy.db
       - ./packages/data/prisma/:/birdy/packages/data/prisma/
       - ./services/recorder/src/:/birdy/services/recorder/src/
-      # uncomment line below to use .config.json instead of cli arguments
-      # - ./services/recorder/.config.json:/birdy/services/recorder/.config.json
       - type: tmpfs
         target: /birdy/services/recorder/data
     networks:

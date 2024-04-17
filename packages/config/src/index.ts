@@ -1,5 +1,4 @@
 import * as fs from 'node:fs'
-import * as path from 'node:path'
 import { Argv as Yargv } from 'yargs'
 
 export const getArgvWithoutBin = (): string[] => {
@@ -19,19 +18,15 @@ export class BaseConfig<Parser extends Yargv<{}>, Argv> {
     service: string,
     parser: Parser
   ) {
-    let configPath
-    let config
-
-    try {
-      configPath = path.join('/', 'birdy', 'services', service.replace('@birdy/', ''), '.config.json').trim()
-      config = fs.existsSync(configPath) ? JSON.parse(fs.readFileSync(configPath, 'utf-8'))|| {} : {}
-    } catch {
-      config = {}
-    }
-
     this.service = service
     this.argv = parser
-      .config(config)
+      .config('config', (configPath) => {
+        try {
+          return JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+        } catch {
+          return {}
+        }
+      })
       .parseSync() as Argv
   }
 }
