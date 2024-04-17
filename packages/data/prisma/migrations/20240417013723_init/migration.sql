@@ -1,8 +1,8 @@
 -- CreateTable
 CREATE TABLE "recorders" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "locationId" TEXT NOT NULL,
-    CONSTRAINT "recorders_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "locations" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "location_id" TEXT NOT NULL,
+    CONSTRAINT "recorders_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "locations" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable

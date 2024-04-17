@@ -8,10 +8,10 @@ datasource db {
 }
 
 model Recorder {
-  id         String @id @default(uuid())
-  locationId String
+  id          String @id @default(uuid())
+  location_id String @map("locationId")
 
-  location Location? @relation(fields: [locationId], references: [id])
+  location Location? @relation(fields: [location_id], references: [id])
 
   @@map("recorders")
 }
