@@ -46,6 +46,9 @@ importers:
       '@birdy/config':
         specifier: workspace:^0.0.0
         version: link:../../packages/config
+      '@birdy/data':
+        specifier: workspace:^0.0.0
+        version: link:../../packages/data
       '@birdy/protos':
         specifier: workspace:^0.0.0
         version: link:../../packages/protos
