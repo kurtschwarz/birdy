@@ -64,6 +64,7 @@ services:
       <<: [*minio-env, *node-env, *database-env]
     volumes:
       - *database-volume
+      - ./packages/data/prisma/:/birdy/packages/data/prisma/
       - ./services/collector/src/:/birdy/services/collector/src/
     ports:
       - 127.0.0.1:3000:3000/tcp
@@ -92,11 +93,9 @@ services:
         --worker-queue-retry-delay-max 5000
         --worker-queue-retry-attempts-max 10
     environment:
-      <<: [*node-env, *database-env]
+      <<: [*node-env]
       COLLECTOR_SERVICE_ENDPOINT: http://collector.service.docker:3000
     volumes:
-      - *database-volume
-      - ./packages/data/prisma/:/birdy/packages/data/prisma/
       - ./services/recorder/src/:/birdy/services/recorder/src/
       - type: tmpfs
         target: /birdy/services/recorder/data

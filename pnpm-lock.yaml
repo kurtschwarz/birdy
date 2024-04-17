@@ -92,9 +92,6 @@ importers:
       '@birdy/config':
         specifier: workspace:^0.0.0
         version: link:../../packages/config
-      '@birdy/data':
-        specifier: workspace:^0.0.0
-        version: link:../../packages/data
       '@birdy/protos':
         specifier: workspace:^0.0.0
         version: link:../../packages/protos
@@ -107,9 +104,6 @@ importers:
       '@connectrpc/connect-node':
         specifier: ^1.4.0
         version: 1.4.0(@bufbuild/protobuf@1.8.0)(@connectrpc/connect@1.4.0)
-      '@prisma/client':
-        specifier: ^5.12.1
-        version: 5.12.1(prisma@5.12.1)
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10

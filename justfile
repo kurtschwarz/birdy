@@ -36,7 +36,7 @@ dev *argv:
 
   {{compose}} up {{argv}}
 
-migrate *services='recorder':
+migrate *services='collector':
   #!/usr/bin/env bash
   set -exuo pipefail
 
@@ -46,7 +46,7 @@ migrate *services='recorder':
         pnpm exec prisma migrate deploy
   done
 
-create type service='recorder' *args='':
+create type service='collector' *args='':
   #!/usr/bin/env bash
   set -exuo pipefail
 
