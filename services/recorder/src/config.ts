@@ -39,6 +39,7 @@ const argvParser = yargs(getArgvWithoutBin())
     number: true,
     default: 10
   })
+  .env(true)
 
 class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.parseSync>> {
   constructor () {

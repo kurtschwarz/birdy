@@ -1,11 +1,13 @@
 import { Client } from 'minio'
 
+import { config } from '../../config.js'
+
 const minio = new Client({
-  endPoint: process.env.MINIO_ENDPOINT,
-  port: parseInt(process.env.MINIO_PORT),
+  endPoint: config.minioEndpoint,
+  port: config.minioPort,
   useSSL: false,
-  accessKey: process.env.MINIO_ROOT_USER,
-  secretKey: process.env.MINIO_ROOT_PASSWORD,
+  accessKey: config.minioUser,
+  secretKey: config.minioPassword,
 })
 
 export const storeRecording = async (
@@ -13,7 +15,7 @@ export const storeRecording = async (
   buffer: Buffer
 ): Promise<void> => {
   await minio.putObject(
-    'birdy-recordings-unprocessed',
+    config.storageBucketName,
     `${id}.wav`,
     buffer
   )
