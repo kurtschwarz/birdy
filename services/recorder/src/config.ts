@@ -42,7 +42,7 @@ const argvParser = yargs(getArgvWithoutBin())
 
 class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.parseSync>> {
   constructor () {
-    super(argvParser)
+    super('@birdy/recorder', argvParser)
   }
 
   get id (): string {
