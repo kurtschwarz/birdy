@@ -1,7 +1,7 @@
 import pino from 'pino'
 import pretty from 'pino-pretty'
 
-import { config } from './config'
+import { config } from '../config'
 
 export const logger = (() => {
   let stream

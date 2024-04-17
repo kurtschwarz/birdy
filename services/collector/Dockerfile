@@ -38,6 +38,7 @@ FROM base AS dependencies
 COPY --chown=node:node ./package*.json ./pnpm-*.yaml /birdy/
 COPY --chown=node:node ./services/${SERVICE_NAME}/package*.json /birdy/services/${SERVICE_NAME}/
 
+COPY --chown=node:node ./packages/config/package*.json /birdy/packages/config/
 COPY --chown=node:node ./packages/protos/package*.json /birdy/packages/protos/
 
 WORKDIR /birdy
@@ -53,6 +54,7 @@ COPY --from=dependencies /birdy/ /birdy/
 COPY --chown=node:node ./tsconfig*.json /birdy/
 COPY --chown=node:node ./services/${SERVICE_NAME}/ /birdy/services/${SERVICE_NAME}/
 
+COPY --chown=node:node ./packages/config/ /birdy/packages/config/
 COPY --chown=node:node ./packages/protos/ /birdy/packages/protos/
 
 WORKDIR /birdy/services/${SERVICE_NAME}/

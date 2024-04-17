@@ -1,13 +1,6 @@
 import yargs from 'yargs'
 
-const getArgvWithoutBin = (): string[] => {
-  let argv = process.argv.slice(2)
-  if (argv?.[0] === '--') {
-    argv.shift()
-  }
-
-  return argv
-}
+import { getArgvWithoutBin, BaseConfig } from '@birdy/config'
 
 const argvParser = yargs(getArgvWithoutBin())
   .option('id', {
@@ -47,11 +40,9 @@ const argvParser = yargs(getArgvWithoutBin())
     default: 10
   })
 
-class Config {
-  protected argv: ReturnType<typeof argvParser.parseSync>
-
+class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.parseSync>> {
   constructor () {
-    this.argv = argvParser.parseSync()
+    super(argvParser)
   }
 
   get id (): string {

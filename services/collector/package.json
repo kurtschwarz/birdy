@@ -7,6 +7,7 @@
     "dev": "pnpm exec tsx watch --inspect=0.0.0.0:9229 ./src/main.ts"
   },
   "dependencies": {
+    "@birdy/config": "workspace:^0.0.0",
     "@birdy/protos": "workspace:^0.0.0",
     "@connectrpc/connect": "^1.4.0",
     "@connectrpc/connect-fastify": "^1.4.0",

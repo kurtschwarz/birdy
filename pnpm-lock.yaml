@@ -12,6 +12,16 @@ importers:
         specifier: ^8.15.6
         version: 8.15.6
 
+  packages/config:
+    dependencies:
+      yargs:
+        specifier: ^17.7.2
+        version: 17.7.2
+    devDependencies:
+      '@types/yargs':
+        specifier: ^17.0.32
+        version: 17.0.32
+
   packages/data:
     dependencies:
       '@prisma/client':
@@ -33,6 +43,9 @@ importers:
 
   services/collector:
     dependencies:
+      '@birdy/config':
+        specifier: workspace:^0.0.0
+        version: link:../../packages/config
       '@birdy/protos':
         specifier: workspace:^0.0.0
         version: link:../../packages/protos
@@ -73,6 +86,9 @@ importers:
 
   services/recorder:
     dependencies:
+      '@birdy/config':
+        specifier: workspace:^0.0.0
+        version: link:../../packages/config
       '@birdy/data':
         specifier: workspace:^0.0.0
         version: link:../../packages/data
