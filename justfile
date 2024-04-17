@@ -30,7 +30,7 @@ build *argv:
 
   {{compose}} build {{argv}}
 
-dev *argv:
+run *argv:
   #!/usr/bin/env bash
   set -exuo pipefail
 
