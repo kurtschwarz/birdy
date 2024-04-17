@@ -1,3 +1,6 @@
 {
-  "id": "test-recorder"
+  "id": "backyard-gazebo",
+  "locationId": "backyard",
+  "locationLat": "43.4304048",
+  "locationLong: "-80.5587149"
 }
