@@ -1,14 +1,15 @@
 import * as process from 'node:process'
 
-import { initializeFastify } from './initializers/fastify'
-import { initializeConnect } from './initializers/connect'
+import { config } from './config.js'
+import { initializeFastify } from './initializers/fastify.js'
+import { initializeConnect } from './initializers/connect.js'
 
 async function main(): Promise<void> {
   const connectRoutes = await initializeConnect()
   const server = await initializeFastify(connectRoutes)
   await server.listen({
     host: '0.0.0.0',
-    port: 3000
+    port: config.port
   })
 }
 
