@@ -14,6 +14,11 @@ class CollectorServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.Register = channel.unary_unary(
+                '/collector.v1.CollectorService/Register',
+                request_serializer=collector_dot_v1_dot_service__pb2.RegisterRequest.SerializeToString,
+                response_deserializer=collector_dot_v1_dot_service__pb2.RegisterResponse.FromString,
+                )
         self.Collect = channel.stream_unary(
                 '/collector.v1.CollectorService/Collect',
                 request_serializer=collector_dot_v1_dot_service__pb2.CollectRequest.SerializeToString,
@@ -24,6 +29,12 @@ class CollectorServiceStub(object):
 class CollectorServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
+    def Register(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def Collect(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -33,6 +44,11 @@ class CollectorServiceServicer(object):
 
 def add_CollectorServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'Register': grpc.unary_unary_rpc_method_handler(
+                    servicer.Register,
+                    request_deserializer=collector_dot_v1_dot_service__pb2.RegisterRequest.FromString,
+                    response_serializer=collector_dot_v1_dot_service__pb2.RegisterResponse.SerializeToString,
+            ),
             'Collect': grpc.stream_unary_rpc_method_handler(
                     servicer.Collect,
                     request_deserializer=collector_dot_v1_dot_service__pb2.CollectRequest.FromString,
@@ -47,6 +63,23 @@ def add_CollectorServiceServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class CollectorService(object):
     """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def Register(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/collector.v1.CollectorService/Register',
+            collector_dot_v1_dot_service__pb2.RegisterRequest.SerializeToString,
+            collector_dot_v1_dot_service__pb2.RegisterResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def Collect(request_iterator,

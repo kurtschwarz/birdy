@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { CollectRequest, CollectResponse } from "./service_pb.js";
+import { CollectRequest, CollectResponse, RegisterRequest, RegisterResponse } from "./service_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -12,6 +12,15 @@ import { MethodKind } from "@bufbuild/protobuf";
 export const CollectorService = {
   typeName: "collector.v1.CollectorService",
   methods: {
+    /**
+     * @generated from rpc collector.v1.CollectorService.Register
+     */
+    register: {
+      name: "Register",
+      I: RegisterRequest,
+      O: RegisterResponse,
+      kind: MethodKind.Unary,
+    },
     /**
      * @generated from rpc collector.v1.CollectorService.Collect
      */

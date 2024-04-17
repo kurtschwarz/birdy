@@ -59,6 +59,9 @@ COPY --chown=node:node ./packages/config/ /birdy/packages/config/
 COPY --chown=node:node ./packages/data/ /birdy/packages/data/
 COPY --chown=node:node ./packages/protos/ /birdy/packages/protos/
 
+WORKDIR /birdy/packages/data/
+RUN pnpm exec prisma generate
+
 WORKDIR /birdy/services/${SERVICE_NAME}/
 EXPOSE 3000/tcp
 ENTRYPOINT [ "pnpm" ]
