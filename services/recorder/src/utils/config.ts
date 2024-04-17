@@ -1,35 +1,77 @@
-import yargs, { Argv } from 'yargs'
+import yargs from 'yargs'
+
+const getArgvWithoutBin = (): string[] => {
+  let argv = process.argv.slice(2)
+  if (argv?.[0] === '--') {
+    argv.shift()
+  }
+
+  return argv
+}
+
+const argvParser = yargs(getArgvWithoutBin())
+  .option('id', {
+    string: true,
+  })
+  .option('log-level', {
+    string: true,
+    default: 'info'
+  })
+  .option('location-id', {
+    string: true,
+  })
+  .option('location-lat', {
+    string: true,
+  })
+  .option('location-long', {
+    string: true,
+  })
+  .option('recording-duration', {
+    number: true,
+    default: 15
+  })
+  .option('transfer-chunk-size', {
+    number: true,
+    default: 512000 // 512kb
+  })
+  .option('worker-queue-retry-delay', {
+    number: true,
+    default: 200
+  })
+  .option('worker-queue-retry-delay-max', {
+    number: true,
+    default: 5000 // 5 seconds
+  })
+  .option('worker-queue-retry-attempts-max', {
+    number: true,
+    default: 10
+  })
 
 class Config {
-  argv: Argv
+  protected argv: ReturnType<typeof argvParser.parseSync>
 
   constructor () {
-    this.argv = yargs(process.argv.slice(2))
-      .option('recording-duration', {
-        number: true,
-        default: 15
-      })
-      .option('transfer-chunk-size', {
-        number: true,
-        default: 512000 // 512kb
-      })
-      .option('worker-queue-retry-delay', {
-        number: true,
-        default: 200
-      })
-      .option('worker-queue-retry-delay-max', {
-        number: true,
-        default: 5000 // 5 seconds
-      })
-      .option('worker-queue-retry-attempts-max', {
-        number: true,
-        default: 10
-      })
-      .option('log-level', {
-        string: true,
-        default: 'info'
-      })
-      .parseSync()
+    this.argv = argvParser.parseSync()
+  }
+
+  get id (): string {
+    return this.argv.id
+  }
+
+  get logLevel(): string {
+    return this.argv.logLevel
+  }
+
+  get locationId (): string {
+    return this.argv.locationId
+  }
+
+  get locationLat (): string {
+    return this.argv.locationLat
+  }
+
+  get locationLong (): string {
+    return this.argv.locationLong
   }
 
   get recordingDuration(): number {
@@ -50,10 +92,6 @@ class Config {
 
   get workerQueueRetryAttemptsMax(): number {
     return this.argv.workerQueueRetryAttemptsMax
-  }
-
-  get logLevel(): string {
-    return this.argv.logLevel
   }
 }
 
