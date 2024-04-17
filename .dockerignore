@@ -1,0 +1,16 @@
+.gitignore
+.dockerignore
+.npmrc
+.nvmrc
+.env
+.DS_Store
+.pre-commit-config.yaml
+docker-compose.yaml
+*.md
+
+.git/
+.github/
+node_modules/
+docs/
+
+**/node_modules

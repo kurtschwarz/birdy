@@ -10,7 +10,8 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
-    "pnpm": "^8.15.6"
+    "pnpm": "^8.15.6",
+    "turbo": "^1.13.2"
   },
   "engines": {
     "node": ">=21",

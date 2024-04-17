@@ -1,6 +1,8 @@
 .DS_Store
 node_modules/
 
+.turbo/
+
 data/*
 !data/.gitkeep
 
