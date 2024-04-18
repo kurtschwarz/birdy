@@ -56,6 +56,55 @@ export class Status extends Message<Status> {
 }
 
 /**
+ * @generated from message analyzer.v1.Location
+ */
+export class Location extends Message<Location> {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id = "";
+
+  /**
+   * @generated from field: string latitude = 2;
+   */
+  latitude = "";
+
+  /**
+   * @generated from field: string longitude = 3;
+   */
+  longitude = "";
+
+  constructor(data?: PartialMessage<Location>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "analyzer.v1.Location";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "latitude", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "longitude", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Location {
+    return new Location().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): Location {
+    return new Location().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): Location {
+    return new Location().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: Location | PlainMessage<Location> | undefined, b: Location | PlainMessage<Location> | undefined): boolean {
+    return proto3.util.equals(Location, a, b);
+  }
+}
+
+/**
  * @generated from message analyzer.v1.Recording
  */
 export class Recording extends Message<Recording> {
@@ -93,6 +142,73 @@ export class Recording extends Message<Recording> {
 }
 
 /**
+ * @generated from message analyzer.v1.Detection
+ */
+export class Detection extends Message<Detection> {
+  /**
+   * @generated from field: float start_time = 1;
+   */
+  startTime = 0;
+
+  /**
+   * @generated from field: float end_time = 2;
+   */
+  endTime = 0;
+
+  /**
+   * @generated from field: float confidence = 3;
+   */
+  confidence = 0;
+
+  /**
+   * @generated from field: string common_name = 4;
+   */
+  commonName = "";
+
+  /**
+   * @generated from field: string scientific_name = 5;
+   */
+  scientificName = "";
+
+  /**
+   * @generated from field: string label = 6;
+   */
+  label = "";
+
+  constructor(data?: PartialMessage<Detection>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "analyzer.v1.Detection";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "start_time", kind: "scalar", T: 2 /* ScalarType.FLOAT */ },
+    { no: 2, name: "end_time", kind: "scalar", T: 2 /* ScalarType.FLOAT */ },
+    { no: 3, name: "confidence", kind: "scalar", T: 2 /* ScalarType.FLOAT */ },
+    { no: 4, name: "common_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 5, name: "scientific_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 6, name: "label", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Detection {
+    return new Detection().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): Detection {
+    return new Detection().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): Detection {
+    return new Detection().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: Detection | PlainMessage<Detection> | undefined, b: Detection | PlainMessage<Detection> | undefined): boolean {
+    return proto3.util.equals(Detection, a, b);
+  }
+}
+
+/**
  * @generated from message analyzer.v1.AnalyzeRequest
  */
 export class AnalyzeRequest extends Message<AnalyzeRequest> {
@@ -100,6 +216,11 @@ export class AnalyzeRequest extends Message<AnalyzeRequest> {
    * @generated from field: analyzer.v1.Recording recording = 1;
    */
   recording?: Recording;
+
+  /**
+   * @generated from field: analyzer.v1.Location location = 2;
+   */
+  location?: Location;
 
   constructor(data?: PartialMessage<AnalyzeRequest>) {
     super();
@@ -110,6 +231,7 @@ export class AnalyzeRequest extends Message<AnalyzeRequest> {
   static readonly typeName = "analyzer.v1.AnalyzeRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "recording", kind: "message", T: Recording },
+    { no: 2, name: "location", kind: "message", T: Location },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AnalyzeRequest {
@@ -138,6 +260,11 @@ export class AnalyzeResponse extends Message<AnalyzeResponse> {
    */
   status?: Status;
 
+  /**
+   * @generated from field: repeated analyzer.v1.Detection detections = 2;
+   */
+  detections: Detection[] = [];
+
   constructor(data?: PartialMessage<AnalyzeResponse>) {
     super();
     proto3.util.initPartial(data, this);
@@ -147,6 +274,7 @@ export class AnalyzeResponse extends Message<AnalyzeResponse> {
   static readonly typeName = "analyzer.v1.AnalyzeResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "status", kind: "message", T: Status },
+    { no: 2, name: "detections", kind: "message", T: Detection, repeated: true },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AnalyzeResponse {

@@ -11,16 +11,33 @@ message Status {
   repeated google.protobuf.Any details = 3;
 }
 
+message Location {
+  string id = 1;
+  string latitude = 2;
+  string longitude = 3;
+}
+
 message Recording {
   string id = 1;
 }
 
+message Detection {
+  float start_time = 1;
+  float end_time = 2;
+  float confidence = 3;
+  string common_name = 4;
+  string scientific_name = 5;
+  string label = 6;
+}
+
 message AnalyzeRequest {
   Recording recording = 1;
+  Location location = 2;
 }
 
 message AnalyzeResponse {
   Status status = 1;
+  repeated Detection detections = 2;
 }
 
 service AnalyzerService {

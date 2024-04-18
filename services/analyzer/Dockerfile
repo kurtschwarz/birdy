@@ -5,8 +5,8 @@
 ARG SERVICE_NAME=analyzer
 ARG SERVICE_VERSION
 
-ARG PYTHON_BUILD_VERSION=3.12.3-bookworm@sha256:c6751fa575260522ca11fbad88394e12cbe31d0d8951d3d29301192745a09aab
-ARG PYTHON_RUNTIME_VERSION=3.12.3-slim-bookworm@sha256:541d45d3d675fb8197f534525a671e2f8d66c882b89491f9dda271f4f94dcd06
+ARG PYTHON_BUILD_VERSION=3.11.9-bookworm@sha256:abe34d06fca0165d40375b0e840fd3296ad2d075954d3a400d4efefe0e9b3012
+ARG PYTHON_RUNTIME_VERSION=3.11.9-slim-bookworm@sha256:dad770592ab3582ab2dabcf0e18a863df9d86bd9d23efcfa614110ce49ac20e4
 
 ARG PNPM_VERSION
 ARG TURBO_VERSION
@@ -23,6 +23,12 @@ ENV SERVICE_VERSION=${SERVICE_VERSION}
 
 ENV TZ=UTC
 
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends \
+      "ffmpeg=7:5.1.4*" && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # -------------------------------------------------------------------------------------------------
 
 FROM base AS dependencies
@@ -35,10 +41,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 FROM base AS dev
 
-COPY --from=dependencies /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
-COPY ./services/${SERVICE_NAME}/ /birdy/services/${SERVICE_NAME}/
+COPY --from=dependencies /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY ./services/${SERVICE_NAME}/src/ /birdy/services/${SERVICE_NAME}/src/
 COPY ./packages/protos/gen/py/ /birdy/packages/protos/gen/py/
-
-WORKDIR /birdy/services/${SERVICE_NAME}
+WORKDIR /birdy/services/${SERVICE_NAME}/src/
 ENTRYPOINT [ "python" ]
 CMD [ "main.py" ]

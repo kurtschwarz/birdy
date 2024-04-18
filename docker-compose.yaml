@@ -104,6 +104,12 @@ services:
       target: dev
       context: ./
       dockerfile: ./services/analyzer/Dockerfile
+    volumes:
+      - ./services/analyzer/src/:/birdy/services/analyzer/src/
+    environment:
+      <<: [*minio-env]
+    ports:
+      - 127.0.0.1:50051:50051/tcp
     networks:
       birdy-net:
         aliases:
