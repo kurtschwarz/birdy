@@ -19,6 +19,23 @@ x-database-volume: &database-volume
   ./data/birdy.db:/birdy/data/birdy.db
 
 services:
+  mqtt-broker:
+    image: emqx:5.6.0@sha256:0f5e00b359d55a05185f05ee64f853018ca2a112fe552701e69c5e0711f1f642
+    environment:
+      EMQX_NAME: birdy-broker
+      EMQX_HOST: mqtt.service.docker
+    volumes:
+      - mqtt-broker-config:/opt/emqx/etc
+      - mqtt-broker-data:/opt/emqx/data
+    ports:
+      - 127.0.0.1:18083:18083/tcp
+      - 127.0.0.1:1883:1883/tcp
+    networks:
+      birdy-net:
+        aliases:
+          - mqtt.service.docker
+    restart: on-failure
+
   minio:
     <<: *minio-service
     ports:
@@ -32,6 +49,8 @@ services:
       birdy-net:
         aliases:
           - minio.service.docker
+    depends_on:
+      - mqtt-broker
     restart: always
 
   minio-init:
@@ -115,6 +134,12 @@ services:
         aliases:
           - analyzer.service.docker
     restart: always
+
+volumes:
+  mqtt-broker-config:
+    name: mqtt-broker-config
+  mqtt-broker-data:
+    name: mqtt-broker-data
 
 networks:
   birdy-net:
