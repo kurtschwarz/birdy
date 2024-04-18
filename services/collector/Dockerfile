@@ -65,5 +65,5 @@ RUN pnpm exec prisma generate
 
 WORKDIR /birdy/services/${SERVICE_NAME}/
 EXPOSE 3000/tcp
-ENTRYPOINT [ "pnpm" ]
-CMD [ "run", "dev" ]
+ENTRYPOINT [ "turbo" ]
+CMD [ "run", "dev", "--filter", "./" ]

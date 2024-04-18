@@ -59,7 +59,7 @@ services:
       context: ./
       dockerfile: ./services/collector/Dockerfile
     command: >
-      pnpm run dev
+      run dev --filter ./
     environment:
       <<: [*minio-env, *node-env, *database-env]
     volumes:
@@ -82,16 +82,7 @@ services:
       context: ./
       dockerfile: ./services/recorder/Dockerfile
     command: >
-      pnpm run dev --
-        --id dev-recorder
-        --location-id dev-location
-        --location-lat 43.4304048
-        --location-long -80.5587149
-        --recording-duration 15
-        --transfer-chunk-size 512000
-        --worker-queue-retry-delay 200
-        --worker-queue-retry-delay-max 5000
-        --worker-queue-retry-attempts-max 10
+      run dev --filter ./
     environment:
       <<: [*node-env]
       COLLECTOR_SERVICE_ENDPOINT: http://collector.service.docker:3000
