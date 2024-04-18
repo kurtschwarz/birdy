@@ -45,6 +45,9 @@ services:
       server /data --console-address ":9001"
     environment:
       <<: *minio-env
+      MINIO_NOTIFY_MQTT_ENABLE_BIRDY_BROKER_RECORDING_UPLOADED: "on"
+      MINIO_NOTIFY_MQTT_BROKER_BIRDY_BROKER_RECORDING_UPLOADED: "tcp://mqtt.service.docker:1883"
+      MINIO_NOTIFY_MQTT_TOPIC_BIRDY_BROKER_RECORDING_UPLOADED: "birdy/recording/uploaded"
     networks:
       birdy-net:
         aliases:
@@ -61,6 +64,7 @@ services:
         /usr/bin/mc alias set birdy http://$$MINIO_ENDPOINT:$$MINIO_PORT $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD
         /usr/bin/mc mb --ignore-existing birdy/birdy-recordings-unprocessed
         /usr/bin/mc mb --ignore-existing birdy/birdy-recordings-processed
+        /usr/bin/mc event add --ignore-existing birdy/birdy-recordings-unprocessed arn:minio:sqs::BIRDY_BROKER_RECORDING_UPLOADED:mqtt --event put
       '
     environment:
       <<: *minio-env
