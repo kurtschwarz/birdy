@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="./docs/images/logo.png" width="300" />
+</p>
+
+# Birdy
+
 ## Architecture
 
 Birdy consists of a few independantly scaleable services:
