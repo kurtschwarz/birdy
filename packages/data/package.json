@@ -5,6 +5,9 @@
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
+  "scripts": {
+    "prisma:generate": "pnpm exec prisma generate"
+  },
   "dependencies": {
     "@prisma/client": "^5.12.1",
     "@prisma/migrate": "^5.12.1"
