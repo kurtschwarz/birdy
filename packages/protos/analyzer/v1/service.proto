@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+
+package analyzer.v1;
+
+message Status {
+  int32 code = 1;
+  string message = 2;
+  repeated google.protobuf.Any details = 3;
+}
+
+message Recording {
+  string id = 1;
+}
+
+message AnalyzeRequest {
+  Recording recording = 1;
+}
+
+message AnalyzeResponse {
+  Status status = 1;
+}
+
+service AnalyzerService {
+  rpc Analyze (AnalyzeRequest) returns (AnalyzeResponse) {}
+}

@@ -25,8 +25,8 @@ build *argv:
   #!/usr/bin/env bash
   set -exuo pipefail
 
-  # just ./packages/data/build
-  # just ./packages/protos/compile
+  just ./packages/data/build
+  just ./packages/protos/compile
 
   PNPM_VERSION=$(jq -r '.devDependencies.pnpm' package.json)
   TURBO_VERSION=$(jq -r '.devDependencies.turbo' package.json)

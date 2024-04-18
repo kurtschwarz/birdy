@@ -74,6 +74,7 @@ services:
           - collector.service.docker
     depends_on:
       - minio
+      - analyzer
     restart: always
 
   recorder:
@@ -96,6 +97,17 @@ services:
           - recorder.service.docker
     depends_on:
       - collector
+    restart: always
+
+  analyzer:
+    build:
+      target: dev
+      context: ./
+      dockerfile: ./services/analyzer/Dockerfile
+    networks:
+      birdy-net:
+        aliases:
+          - analyzer.service.docker
     restart: always
 
 networks:
