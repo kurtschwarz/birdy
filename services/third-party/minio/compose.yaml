@@ -1,0 +1,53 @@
+x-minio-image: &minio-image
+  quay.io/minio/minio:RELEASE.2024-04-06T05-26-02Z@sha256:178e05aba3a0dc967df3558aab43097f1427bbcda77264fc24e92f1bf09dfe02
+
+x-minio-env: &minio-env
+  MINIO_UPDATE: off
+  MINIO_ENDPOINT: minio.birdy.home.arpa
+  MINIO_PORT: 9000
+  MINIO_ROOT_USER: birdy
+  MINIO_ROOT_PASSWORD: birdy123!
+
+services:
+  minio:
+    image: *minio-image
+    command: |
+      server minio.birdy.home.arpa/data
+        --address ":9000"
+        --console-address ":9001"
+    environment:
+      <<: *minio-env
+    volumes:
+      - minio-data:/data
+    ports:
+      - 127.0.0.1:9000:9000/tcp
+      - 127.0.0.1:9001:9001/tcp
+    networks:
+      birdy-net:
+        aliases:
+          - minio.birdy.home.arpa
+    restart: always
+
+  minio-init:
+    image: *minio-image
+    entrypoint: /bin/sh
+    command: |
+      -c '
+        /usr/bin/mc alias set birdy http://$$MINIO_ENDPOINT:$$MINIO_PORT $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD
+        /usr/bin/mc mb --ignore-existing birdy/birdy-recordings-unprocessed
+        /usr/bin/mc mb --ignore-existing birdy/birdy-recordings-processed
+      '
+    environment:
+      <<: *minio-env
+    networks:
+      birdy-net:
+        aliases:
+          - minio-init.service.docker
+    depends_on:
+      minio:
+        condition: service_started
+    restart: on-failure
+
+volumes:
+  minio-data:
+    name: minio-data

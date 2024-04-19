@@ -1,12 +1,3 @@
-x-minio-image: &minio-service
-  image: quay.io/minio/minio:RELEASE.2024-04-06T05-26-02Z@sha256:178e05aba3a0dc967df3558aab43097f1427bbcda77264fc24e92f1bf09dfe02
-
-x-minio-env: &minio-env
-  MINIO_ENDPOINT: minio.service.docker
-  MINIO_PORT: 9000
-  MINIO_ROOT_USER: birdy
-  MINIO_ROOT_PASSWORD: birdy123!
-
 x-node-env: &node-env
   NODE_ENV: development
 
@@ -16,66 +7,11 @@ x-database-env: &database-env
 x-database-volume: &database-volume
   ./data/birdy.db:/birdy/data/birdy.db
 
+include:
+  - path: services/third-party/minio/compose.yaml
+  - path: services/third-party/mqtt/compose.yaml
+
 services:
-  mqtt-broker:
-    image: emqx:5.6.0@sha256:0f5e00b359d55a05185f05ee64f853018ca2a112fe552701e69c5e0711f1f642
-    environment:
-      EMQX_NAME: birdy-broker
-      EMQX_HOST: mqtt.service.docker
-    volumes:
-      - mqtt-broker-config:/opt/emqx/etc
-      - mqtt-broker-data:/opt/emqx/data
-    ports:
-      - 127.0.0.1:18083:18083/tcp
-      - 127.0.0.1:1883:1883/tcp
-    networks:
-      birdy-net:
-        aliases:
-          - mqtt.service.docker
-    restart: on-failure
-
-  minio:
-    <<: *minio-service
-    ports:
-      - 127.0.0.1:9000:9000/tcp
-      - 127.0.0.1:9001:9001/tcp
-    command: |
-      server /data --console-address ":9001"
-    environment:
-      <<: *minio-env
-      MINIO_NOTIFY_MQTT_ENABLE_BIRDY_BROKER_RECORDING_UPLOADED: "on"
-      MINIO_NOTIFY_MQTT_BROKER_BIRDY_BROKER_RECORDING_UPLOADED: "tcp://mqtt.service.docker:1883"
-      MINIO_NOTIFY_MQTT_TOPIC_BIRDY_BROKER_RECORDING_UPLOADED: "birdy/recording/uploaded"
-    volumes:
-      - minio-data:/data
-    networks:
-      birdy-net:
-        aliases:
-          - minio.service.docker
-    depends_on:
-      - mqtt-broker
-    restart: always
-
-  minio-init:
-    <<: *minio-service
-    entrypoint: /bin/sh
-    command: |
-      -c '
-        /usr/bin/mc alias set birdy http://$$MINIO_ENDPOINT:$$MINIO_PORT $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD
-        /usr/bin/mc mb --ignore-existing birdy/birdy-recordings-unprocessed
-        /usr/bin/mc mb --ignore-existing birdy/birdy-recordings-processed
-        /usr/bin/mc event add --ignore-existing birdy/birdy-recordings-unprocessed arn:minio:sqs::BIRDY_BROKER_RECORDING_UPLOADED:mqtt --event put
-      '
-    environment:
-      <<: *minio-env
-    networks:
-      birdy-net:
-        aliases:
-          - minio-init.service.docker
-    depends_on:
-      - minio
-    restart: on-failure
-
   collector:
     build:
       target: dev
@@ -84,7 +20,7 @@ services:
     command: >
       run dev --filter ./
     environment:
-      <<: [*minio-env, *node-env, *database-env]
+      <<: [*node-env, *database-env]
     volumes:
       - *database-volume
       - ./packages/data/prisma/:/birdy/packages/data/prisma/
@@ -96,7 +32,6 @@ services:
         aliases:
           - collector.service.docker
     depends_on:
-      - minio
       - analyzer
     restart: always
 
@@ -132,8 +67,6 @@ services:
         --config /birdy/services/analyzer/.config.json
     volumes:
       - ./services/analyzer/src/:/birdy/services/analyzer/src/
-    environment:
-      <<: [*minio-env]
     ports:
       - 127.0.0.1:50051:50051/tcp
     networks:
@@ -141,14 +74,6 @@ services:
         aliases:
           - analyzer.service.docker
     restart: always
-
-volumes:
-  minio-data:
-    name: minio-data
-  mqtt-broker-config:
-    name: mqtt-broker-config
-  mqtt-broker-data:
-    name: mqtt-broker-data
 
 networks:
   birdy-net:
