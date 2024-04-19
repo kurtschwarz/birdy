@@ -8,9 +8,9 @@ x-database-volume: &database-volume
   ./data/birdy.db:/birdy/data/birdy.db
 
 include:
-  - path: services/third-party/minio/compose.yaml
-  - path: services/third-party/mqtt/compose.yaml
-  - path: services/third-party/redpanda/compose.yaml
+  - path: ./services/third-party/minio/compose.yaml
+  - path: ./services/third-party/mqtt/compose.yaml
+  - path: ./services/third-party/redpanda/compose.yaml
 
 services:
   collector:
@@ -20,7 +20,9 @@ services:
       dockerfile: ./services/collector/Dockerfile
     command: >
       run dev --filter ./ --
-        --kafka-enabled true
+        --mqtt-enabled
+        --mqtt-broker http://mqtt.birdy.home.arpa:1883
+        --kafka-enabled
         --kafka-broker redpanda.birdy.home.arpa:9092
     environment:
       <<: [*node-env, *database-env]
@@ -39,6 +41,8 @@ services:
         aliases:
           - collector.service.docker
     depends_on:
+      mqtt:
+        condition: service_started
       redpanda:
         condition: service_started
     restart: always
@@ -49,7 +53,10 @@ services:
       context: ./
       dockerfile: ./services/recorder/Dockerfile
     command: >
-      run dev --filter ./
+      run dev --filter ./ --
+        --id dev-recorder
+        --mqtt-enabled
+        --mqtt-broker http://mqtt.birdy.home.arpa:1883
     environment:
       <<: [*node-env]
       COLLECTOR_SERVICE_ENDPOINT: http://collector.service.docker:3000
@@ -62,7 +69,10 @@ services:
         aliases:
           - recorder.service.docker
     depends_on:
-      - collector
+      mqtt:
+        condition: service_started
+      collector:
+        condition: service_started
     restart: always
 
   analyzer:

@@ -4,7 +4,7 @@ import { getArgvWithoutBin, BaseConfig } from '@birdy/config'
 
 const argvParser = yargs(getArgvWithoutBin())
   .option('id', {
-    string: true,
+    string: true
   })
   .option('log-level', {
     string: true,
@@ -39,6 +39,8 @@ const argvParser = yargs(getArgvWithoutBin())
     number: true,
     default: 10
   })
+  .option('mqttEnabled', { boolean: true, default: false })
+  .option('mqttBroker', { string: true, default: null })
   .env(true)
 
 class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.parseSync>> {
@@ -85,6 +87,9 @@ class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.
   get workerQueueRetryAttemptsMax(): number {
     return this.argv.workerQueueRetryAttemptsMax
   }
+
+  get mqttEnabled (): boolean { return this.argv.mqttEnabled }
+  get mqttBroker (): string { return this.argv.mqttBroker }
 }
 
 export const config = new Config()

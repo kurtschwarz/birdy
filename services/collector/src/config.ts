@@ -9,6 +9,8 @@ const argvParser = yargs(getArgvWithoutBin())
   .option('minioUser', { string: true, alias: 'minioRootUser' })
   .option('minioPassword', { string: true, alias: 'minioRootPassword' })
   .option('storageBucketName', { string: true, default: 'birdy-recordings-unprocessed' })
+  .option('mqttEnabled', { boolean: true, default: false })
+  .option('mqttBroker', { string: true, default: null })
   .option('kafkaEnabled', { boolean: true, default: false })
   .option('kafkaBrokers', { string: true, array: true, default: [] })
   .env(true)
@@ -26,6 +28,9 @@ class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.
   get minioPassword (): string { return this.argv.minioPassword }
 
   get storageBucketName (): string { return this.argv.storageBucketName }
+
+  get mqttEnabled (): boolean { return this.argv.mqttEnabled }
+  get mqttBroker (): string { return this.argv.mqttBroker }
 
   get kafkaEnabled (): boolean { return this.argv.kafkaEnabled }
   get kafkaBrokers (): string[] { return this.argv.kafkaBrokers }
