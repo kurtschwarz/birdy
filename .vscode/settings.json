@@ -1,6 +1,7 @@
 {
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
   },
   "python.autoComplete.extraPaths": ["packages/protos/gen/py"],
   "python.analysis.extraPaths": ["packages/protos/gen/py"]

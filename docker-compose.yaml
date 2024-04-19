@@ -129,6 +129,9 @@ services:
       target: dev
       context: ./
       dockerfile: ./services/analyzer/Dockerfile
+    command: >
+      main.py
+        --config /birdy/services/analyzer/.config.json
     volumes:
       - ./services/analyzer/src/:/birdy/services/analyzer/src/
     environment:
