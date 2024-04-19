@@ -10,6 +10,7 @@ x-database-volume: &database-volume
 include:
   - path: services/third-party/minio/compose.yaml
   - path: services/third-party/mqtt/compose.yaml
+  - path: services/third-party/redpanda/compose.yaml
 
 services:
   collector:

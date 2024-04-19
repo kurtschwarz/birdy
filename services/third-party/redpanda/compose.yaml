@@ -1,0 +1,62 @@
+configs:
+  redpanda-console-config.yml:
+    content: |
+      kafka:
+        brokers: ["redpanda.birdy.home.arpa:9092"]
+        schemaRegistry:
+          enabled: true
+          urls: ["http://redpanda.birdy.home.arpa:8081"]
+      redpanda:
+        adminApi:
+          enabled: true
+          urls: ["http://redpanda.birdy.home.arpa:9644"]
+
+services:
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.3.12@sha256:8996bd24bd7afa534dc35495767e248aaca1a7a4fc2703b5f294a8d0c185133f
+    command: |
+      redpanda start
+        --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+        --advertise-kafka-addr internal://redpanda.birdy.home.arpa:9092,external://localhost:19092
+        --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:18082
+        --advertise-pandaproxy-addr internal://redpanda.birdy.home.arpa:8082,external://localhost:18082
+        --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:18081
+        --rpc-addr redpanda.birdy.home.arpa:33145
+        --advertise-rpc-addr redpanda.birdy.home.arpa:33145
+        --mode dev-container
+        --smp 1
+        --default-log-level=info
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    ports:
+      - 127.0.0.1:18081:18081/tcp
+      - 127.0.0.1:18082:18082/tcp
+      - 127.0.0.1:19092:19092/tcp
+      - 127.0.0.1:19644:9644/tcp
+    networks:
+      birdy-net:
+        aliases:
+          - redpanda.birdy.home.arpa
+    restart: always
+
+  redpanda-console:
+    image: docker.redpanda.com/redpandadata/console:v2.4.6@sha256:e4cb11f01eebdf013a638353d962c86f75b5046dfc427539542ed768d7104499
+    configs:
+      - source: redpanda-console-config.yml
+        target: /etc/redpanda/redpanda-console-config.yaml
+    environment:
+      - CONFIG_FILEPATH=/etc/redpanda/redpanda-console-config.yaml
+    ports:
+      - 127.0.0.1:8080:8080/tcp
+    networks:
+      birdy-net:
+        aliases:
+          - redpanda-console.birdy.home.arpa
+    depends_on:
+      redpanda:
+        condition: service_started
+    restart: always
+
+volumes:
+  redpanda-data:
+    name: redpanda-data
