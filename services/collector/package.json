@@ -7,14 +7,16 @@
     "dev": "pnpm exec tsx watch --inspect=0.0.0.0:9229 ./src/main.ts"
   },
   "dependencies": {
-    "@birdy/data": "workspace:^0.0.0",
     "@birdy/config": "workspace:^0.0.0",
+    "@birdy/data": "workspace:^0.0.0",
     "@birdy/protos": "workspace:^0.0.0",
     "@connectrpc/connect": "^1.4.0",
     "@connectrpc/connect-fastify": "^1.4.0",
     "@connectrpc/connect-node": "^1.4.0",
     "dayjs": "^1.11.10",
+    "exponential-backoff": "^3.1.1",
     "fastify": "^4.26.2",
+    "kafkajs": "^2.2.4",
     "minio": "^7.1.3",
     "yargs": "^17.7.2"
   },

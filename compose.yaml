@@ -19,9 +19,15 @@ services:
       context: ./
       dockerfile: ./services/collector/Dockerfile
     command: >
-      run dev --filter ./
+      run dev --filter ./ --
+        --kafka-enabled true
+        --kafka-broker redpanda.birdy.home.arpa:9092
     environment:
       <<: [*node-env, *database-env]
+      MINIO_ENDPOINT: minio.birdy.home.arpa
+      MINIO_PORT: 9000
+      MINIO_USER: birdy
+      MINIO_PASSWORD: birdy123!
     volumes:
       - *database-volume
       - ./packages/data/prisma/:/birdy/packages/data/prisma/
@@ -33,7 +39,8 @@ services:
         aliases:
           - collector.service.docker
     depends_on:
-      - analyzer
+      redpanda:
+        condition: service_started
     restart: always
 
   recorder:
