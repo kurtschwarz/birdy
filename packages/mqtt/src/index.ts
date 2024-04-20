@@ -21,6 +21,15 @@ export class MqttClient<PublishableTopics extends Topics> {
 
   private encodeTopic = (topic: string, message: Record<string, any>): string => {
     topic = this.topicEncoder?.(topic) || topic
+
+    for (const [key, value] of Object.entries(message)) {
+      const isValueString = toString.call(value) == '[object String]'
+      const isValueNumeric = !isNaN(parseFloat(value)) && !isNaN(value - 0)
+      if (isValueString || isValueNumeric) {
+        topic = topic.replace(new RegExp(`:${key}`, 'g'), `${value}`)
+      }
+    }
+
     return topic
   }
 
