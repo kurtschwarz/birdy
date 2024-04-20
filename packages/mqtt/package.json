@@ -1,0 +1,11 @@
+{
+  "name": "@birdy/mqtt",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "mqtt": "^5.5.3"
+  }
+}

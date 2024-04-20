@@ -10,12 +10,12 @@ import * as mqtt from './services/mqtt/index.js'
 import * as worker from './worker.js'
 
 asyncExitHook(
-  async () => await mqtt.publish(mqtt.Topic.SERVICE_OFFLINE, { recorderId: config.id, now: new Date() }),
+  async () => await mqtt.publish(mqtt.Topic.RECORDER_SERVICE_OFFLINE, { recorderId: config.id, now: new Date() }),
   { wait: 500 }
 )
 
 async function main(): Promise<void> {
-  await mqtt.publish(mqtt.Topic.SERVICE_ONLINE, { recorderId: config.id, now: new Date() })
+  await mqtt.publish(mqtt.Topic.RECORDER_SERVICE_ONLINE, { recorderId: config.id, now: new Date() })
 
   await recorder.register()
   await worker.start()

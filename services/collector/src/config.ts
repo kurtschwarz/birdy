@@ -3,6 +3,7 @@ import yargs from 'yargs'
 import { getArgvWithoutBin, BaseConfig } from '@birdy/config'
 
 const argvParser = yargs(getArgvWithoutBin())
+  .option('id', { string: true })
   .option('port', { number: true, default: 3000 })
   .option('minioEndpoint', { string: true })
   .option('minioPort', { number: true })
@@ -19,6 +20,8 @@ class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.
   constructor () {
     super('@birdy/collector', argvParser)
   }
+
+  get id (): string { return this.argv.id }
 
   get port (): number { return this.argv.port }
 

@@ -7,12 +7,12 @@ import { initializeConnect } from './initializers/connect.js'
 import * as mqtt from './services/mqtt/index.js'
 
 asyncExitHook(
-  async () => await mqtt.publish(mqtt.Topic.SERVICE_OFFLINE, { now: new Date() }),
+  async () => await mqtt.publish(mqtt.Topic.COLLECTOR_SERVICE_OFFLINE, { collectorId: config.id, now: new Date() }),
   { wait: 500 }
 )
 
 async function main(): Promise<void> {
-  await mqtt.publish(mqtt.Topic.SERVICE_ONLINE, { now: new Date() })
+  await mqtt.publish(mqtt.Topic.COLLECTOR_SERVICE_ONLINE, { collectorId: config.id, now: new Date() })
 
   const connectRoutes = await initializeConnect()
   const server = await initializeFastify(connectRoutes)

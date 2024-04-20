@@ -38,6 +38,12 @@ importers:
         specifier: ^5.12.1
         version: 5.12.1
 
+  packages/mqtt:
+    dependencies:
+      mqtt:
+        specifier: ^5.5.3
+        version: 5.5.3
+
   packages/protos:
     dependencies:
       '@bufbuild/protobuf':
@@ -52,6 +58,9 @@ importers:
       '@birdy/data':
         specifier: workspace:^0.0.0
         version: link:../../packages/data
+      '@birdy/mqtt':
+        specifier: workspace:^0.0.0
+        version: link:../../packages/mqtt
       '@birdy/protos':
         specifier: workspace:^0.0.0
         version: link:../../packages/protos
@@ -82,9 +91,6 @@ importers:
       minio:
         specifier: ^7.1.3
         version: 7.1.3
-      mqtt:
-        specifier: ^5.5.3
-        version: 5.5.3
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -107,6 +113,9 @@ importers:
       '@birdy/config':
         specifier: workspace:^0.0.0
         version: link:../../packages/config
+      '@birdy/mqtt':
+        specifier: workspace:^0.0.0
+        version: link:../../packages/mqtt
       '@birdy/protos':
         specifier: workspace:^0.0.0
         version: link:../../packages/protos
@@ -134,9 +143,6 @@ importers:
       fastq:
         specifier: ^1.17.1
         version: 1.17.1
-      mqtt:
-        specifier: ^5.5.3
-        version: 5.5.3
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7

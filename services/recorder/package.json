@@ -10,6 +10,7 @@
   "dependencies": {
     "@birdy/config": "workspace:^0.0.0",
     "@birdy/protos": "workspace:^0.0.0",
+    "@birdy/mqtt": "workspace:^0.0.0",
     "@bufbuild/protobuf": "^1.8.0",
     "@connectrpc/connect": "^1.4.0",
     "@connectrpc/connect-node": "^1.4.0",
@@ -18,7 +19,6 @@
     "exit-hook": "^4.0.0",
     "exponential-backoff": "^3.1.1",
     "fastq": "^1.17.1",
-    "mqtt": "^5.5.3",
     "nanoid": "^5.0.7",
     "node-cache": "^5.1.2",
     "pino": "^8.20.0",

@@ -3,9 +3,7 @@ import yargs from 'yargs'
 import { getArgvWithoutBin, BaseConfig } from '@birdy/config'
 
 const argvParser = yargs(getArgvWithoutBin())
-  .option('id', {
-    string: true
-  })
+  .option('id', { string: true })
   .option('log-level', {
     string: true,
     default: 'info'
@@ -48,13 +46,9 @@ class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.
     super('@birdy/recorder', argvParser)
   }
 
-  get id (): string {
-    return this.argv.id
-  }
+  get id (): string { return this.argv.id }
 
-  get logLevel(): string {
-    return this.argv.logLevel
-  }
+  get logLevel(): string { return this.argv.logLevel }
 
   get locationId (): string {
     return this.argv.locationId
