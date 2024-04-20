@@ -6,6 +6,7 @@ import { Timestamp } from '@bufbuild/protobuf'
 import type { Recording } from './types/index.js'
 import { config, logger } from './utils/index.js'
 import { collectorService } from './services/collector/index.js'
+import * as mqtt from './services/mqtt/index.js'
 
 let instance: Worker
 let cache: NodeCache
@@ -36,6 +37,7 @@ export const start = async (): Promise<void> => {
           {
             eval: true,
             env: SHARE_ENV,
+            argv: process.argv,
           },
         )
       } else {
@@ -97,6 +99,10 @@ async function worker(): Promise<void> {
     })
 
     parentPort.on('message', async ({ recording }: { recording: Recording }) => {
+      mqtt.publish(mqtt.Topic.RECORDER_SERVICE_RECORDING_CAPTURED, {
+        recordingId: recording.id,
+      })
+
       cache.set(recording.id, recording)
       queue.push({ recordingId: recording.id, attempt: 0 })
     })
