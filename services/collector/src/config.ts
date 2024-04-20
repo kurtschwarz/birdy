@@ -17,26 +17,53 @@ const argvParser = yargs(getArgvWithoutBin())
   .env(true)
 
 class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.parseSync>> {
-  constructor () {
+  constructor() {
     super('@birdy/collector', argvParser)
   }
 
-  get id (): string { return this.argv.id }
+  get id(): string {
+    return this.argv.id
+  }
 
-  get port (): number { return this.argv.port }
+  get port(): number {
+    return this.argv.port
+  }
 
-  get minioEndpoint (): string { return this.argv.minioEndpoint }
-  get minioPort (): number { return this.argv.minioPort }
-  get minioUser (): string { return this.argv.minioUser }
-  get minioPassword (): string { return this.argv.minioPassword }
+  get minioEndpoint(): string {
+    return this.argv.minioEndpoint
+  }
 
-  get storageBucketName (): string { return this.argv.storageBucketName }
+  get minioPort(): number {
+    return this.argv.minioPort
+  }
 
-  get mqttEnabled (): boolean { return this.argv.mqttEnabled }
-  get mqttBroker (): string { return this.argv.mqttBroker }
+  get minioUser(): string {
+    return this.argv.minioUser
+  }
 
-  get kafkaEnabled (): boolean { return this.argv.kafkaEnabled }
-  get kafkaBrokers (): string[] { return this.argv.kafkaBrokers }
+  get minioPassword(): string {
+    return this.argv.minioPassword
+  }
+
+  get storageBucketName(): string {
+    return this.argv.storageBucketName
+  }
+
+  get mqttEnabled(): boolean {
+    return this.argv.mqttEnabled
+  }
+
+  get mqttBroker(): string {
+    return this.argv.mqttBroker
+  }
+
+  get kafkaEnabled(): boolean {
+    return this.argv.kafkaEnabled
+  }
+
+  get kafkaBrokers(): string[] {
+    return this.argv.kafkaBrokers
+  }
 }
 
 export const config = new Config()

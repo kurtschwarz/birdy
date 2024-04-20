@@ -7,13 +7,13 @@ export const register = async (): Promise<void> => {
     async () => {
       const response = await collectorService.register({
         recorder: {
-          id: config.id
+          id: config.id,
         },
         location: {
           id: config.locationId,
           latitude: config.locationLat,
-          longitude: config.locationLong
-        }
+          longitude: config.locationLong,
+        },
       })
 
       if (response?.status?.code !== 0) {
@@ -22,7 +22,7 @@ export const register = async (): Promise<void> => {
     },
     {
       maxDelay: 5000,
-      numOfAttempts: 10
-    }
+      numOfAttempts: 10,
+    },
   )
 }

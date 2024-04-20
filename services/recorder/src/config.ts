@@ -6,7 +6,7 @@ const argvParser = yargs(getArgvWithoutBin())
   .option('id', { string: true })
   .option('log-level', {
     string: true,
-    default: 'info'
+    default: 'info',
   })
   .option('location-id', {
     string: true,
@@ -19,46 +19,50 @@ const argvParser = yargs(getArgvWithoutBin())
   })
   .option('recording-duration', {
     number: true,
-    default: 15
+    default: 15,
   })
   .option('transfer-chunk-size', {
     number: true,
-    default: 512000 // 512kb
+    default: 512000, // 512kb
   })
   .option('worker-queue-retry-delay', {
     number: true,
-    default: 200
+    default: 200,
   })
   .option('worker-queue-retry-delay-max', {
     number: true,
-    default: 5000 // 5 seconds
+    default: 5000, // 5 seconds
   })
   .option('worker-queue-retry-attempts-max', {
     number: true,
-    default: 10
+    default: 10,
   })
   .option('mqttEnabled', { boolean: true, default: false })
   .option('mqttBroker', { string: true, default: null })
   .env(true)
 
 class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.parseSync>> {
-  constructor () {
+  constructor() {
     super('@birdy/recorder', argvParser)
   }
 
-  get id (): string { return this.argv.id }
+  get id(): string {
+    return this.argv.id
+  }
 
-  get logLevel(): string { return this.argv.logLevel }
+  get logLevel(): string {
+    return this.argv.logLevel
+  }
 
-  get locationId (): string {
+  get locationId(): string {
     return this.argv.locationId
   }
 
-  get locationLat (): string {
+  get locationLat(): string {
     return this.argv.locationLat
   }
 
-  get locationLong (): string {
+  get locationLong(): string {
     return this.argv.locationLong
   }
 
@@ -82,8 +86,12 @@ class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.
     return this.argv.workerQueueRetryAttemptsMax
   }
 
-  get mqttEnabled (): boolean { return this.argv.mqttEnabled }
-  get mqttBroker (): string { return this.argv.mqttBroker }
+  get mqttEnabled(): boolean {
+    return this.argv.mqttEnabled
+  }
+  get mqttBroker(): string {
+    return this.argv.mqttBroker
+  }
 }
 
 export const config = new Config()

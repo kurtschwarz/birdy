@@ -11,7 +11,7 @@ export const logger = (() => {
 
   return pino(
     {
-      level: config.logLevel
+      level: config.logLevel,
     },
     stream,
   )

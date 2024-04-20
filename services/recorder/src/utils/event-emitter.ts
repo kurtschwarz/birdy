@@ -12,14 +12,14 @@ export class EventEmitter<Events extends Record<string, any>> {
 
   on<EventName extends keyof Events & string>(
     eventName: EventName,
-    handler: (...eventArg: Events[EventName]) => void
+    handler: (...eventArg: Events[EventName]) => void,
   ) {
     this._emitter.on(eventName, handler as any)
   }
 
   off<EventName extends keyof Events & string>(
     eventName: EventName,
-    handler: (...eventArg: Events[EventName]) => void
+    handler: (...eventArg: Events[EventName]) => void,
   ) {
     this._emitter.off(eventName, handler as any)
   }

@@ -8,5 +8,5 @@ export const collectorService = createPromiseClient(
   createConnectTransport({
     httpVersion: '1.1',
     baseUrl: process.env.COLLECTOR_SERVICE_ENDPOINT,
-  })
+  }),
 )

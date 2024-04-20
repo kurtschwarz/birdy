@@ -10,13 +10,6 @@ const minio = new Client({
   secretKey: config.minioPassword,
 })
 
-export const storeRecording = async (
-  id: string,
-  buffer: Buffer
-): Promise<void> => {
-  await minio.putObject(
-    config.storageBucketName,
-    `${id}.wav`,
-    buffer
-  )
+export const storeRecording = async (id: string, buffer: Buffer): Promise<void> => {
+  await minio.putObject(config.storageBucketName, `${id}.wav`, buffer)
 }

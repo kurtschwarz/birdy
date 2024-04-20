@@ -12,40 +12,49 @@ import { EventEmitter } from '../../utils/index.js'
 let ffmpeg: ChildProcessWithoutNullStreams = null
 
 export const events = new EventEmitter<{
-  'recording': [Recording],
+  recording: [Recording]
 }>()
 
-export const capture = async (
-  options: {
-    duration: number
-  },
-): Promise<void> => {
+export const capture = async (options: { duration: number }): Promise<void> => {
   if (ffmpeg != null) {
     await stop()
   }
 
-  ffmpeg = spawn('ffmpeg', [
-    '-hide_banner',
-    '-loglevel', 'error',
-    '-f', 'pulse',
-    '-server', 'host.docker.internal',
-    '-i', 'default',
-    '-f', 'segment',
-    '-segment_time', `${options.duration}`,
-    '-segment_list', 'pipe:3',
-    '-segment_list_type', 'csv',
-    '-strftime', '1',
-    '%Y-%m-%dT%H-%M-%S.wav'
-  ], {
-    cwd: '/birdy/services/recorder/data/',
-    stdio: [
-      'pipe', // stdin
-      'pipe', // stdout
-      'pipe', // stderr
-      'pipe', // pipe:3
+  ffmpeg = spawn(
+    'ffmpeg',
+    [
+      '-hide_banner',
+      '-loglevel',
+      'error',
+      '-f',
+      'pulse',
+      '-server',
+      'host.docker.internal',
+      '-i',
+      'default',
+      '-f',
+      'segment',
+      '-segment_time',
+      `${options.duration}`,
+      '-segment_list',
+      'pipe:3',
+      '-segment_list_type',
+      'csv',
+      '-strftime',
+      '1',
+      '%Y-%m-%dT%H-%M-%S.wav',
     ],
-    detached: true,
-  })
+    {
+      cwd: '/birdy/services/recorder/data/',
+      stdio: [
+        'pipe', // stdin
+        'pipe', // stdout
+        'pipe', // stderr
+        'pipe', // pipe:3
+      ],
+      detached: true,
+    },
+  )
 
   ffmpeg.stderr.on('data', data => console.error(data.toString('utf-8')))
 
@@ -54,7 +63,7 @@ export const capture = async (
   })
 
   // this is called whenever the segment list is updated
-  ffmpeg.stdio[3].on('data', async (data) => {
+  ffmpeg.stdio[3].on('data', async data => {
     const [fileName, startOffset, endOffset] = data.toString('utf-8').trim().split(',')
     const filePath = path.join('/birdy/services/recorder/data/', fileName)
     const startTime = dayjs(fileName.replace('.wav', ''), 'YYYY-MM-DD[T]HH-MM-SS')
@@ -68,16 +77,13 @@ export const capture = async (
     })
 
     // delete the temporary recording file
-    await backOff(
-      async () => fs.unlinkSync(filePath),
-      {
-        delayFirstAttempt: false,
-        numOfAttempts: 5,
-        retry: async (error: Error & { code?: string }): Promise<boolean> => {
-          return error?.code !== 'ENOENT'
-        },
+    await backOff(async () => fs.unlinkSync(filePath), {
+      delayFirstAttempt: false,
+      numOfAttempts: 5,
+      retry: async (error: Error & { code?: string }): Promise<boolean> => {
+        return error?.code !== 'ENOENT'
       },
-    )
+    })
   })
 
   await once(ffmpeg, 'spawn')

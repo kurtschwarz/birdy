@@ -10,8 +10,12 @@ import * as mqtt from './services/mqtt/index.js'
 import * as worker from './worker.js'
 
 asyncExitHook(
-  async () => await mqtt.publish(mqtt.Topic.RECORDER_SERVICE_OFFLINE, { recorderId: config.id, now: new Date() }),
-  { wait: 500 }
+  async () =>
+    await mqtt.publish(mqtt.Topic.RECORDER_SERVICE_OFFLINE, {
+      recorderId: config.id,
+      now: new Date(),
+    }),
+  { wait: 500 },
 )
 
 async function main(): Promise<void> {
@@ -21,11 +25,10 @@ async function main(): Promise<void> {
   await worker.start()
   await audio.capture({ duration: config.recordingDuration })
 
-  audio.events.on('recording', async (recording) => await worker.enqueue(recording))
+  audio.events.on('recording', async recording => await worker.enqueue(recording))
 }
 
-export default main()
-  .catch((error) => {
-    process.stderr.write(error.message)
-    process.exit(1)
-  })
+export default main().catch(error => {
+  process.stderr.write(error.message)
+  process.exit(1)
+})

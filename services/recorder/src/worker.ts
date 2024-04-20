@@ -21,7 +21,9 @@ export const start = async (): Promise<void> => {
       }
 
       if (process.env.NODE_ENV === 'development') {
-        const result = await (await import('esbuild')).build({
+        const result = await (
+          await import('esbuild')
+        ).build({
           entryPoints: ['src/worker.ts'],
           bundle: true,
           write: false,
@@ -29,10 +31,13 @@ export const start = async (): Promise<void> => {
           external: ['esbuild'],
         })
 
-        instance = new Worker(Buffer.from(result.outputFiles[0].contents.buffer).toString('utf-8'), {
-          eval: true,
-          env: SHARE_ENV
-        })
+        instance = new Worker(
+          Buffer.from(result.outputFiles[0].contents.buffer).toString('utf-8'),
+          {
+            eval: true,
+            env: SHARE_ENV,
+          },
+        )
       } else {
         instance = new Worker('./worker.js')
       }
@@ -51,40 +56,39 @@ async function worker(): Promise<void> {
     logger.info('background worker ready')
 
     cache = new NodeCache({
-      useClones: false
+      useClones: false,
     })
 
-    queue = fastq.promise(
-      async ({ recordingId, attempt }): Promise<void> => {
-        if (attempt > 0) {
-          const delay = config.workerQueueRetryDelay * Math.pow(2, attempt)
-          await new Promise(resolve => setTimeout(resolve, Math.min(delay, config.workerQueueRetryDelayMax)))
-        }
-
-        logger.info({ recordingId, attempt }, 'processing recording')
-
-        await collectorService.collect(
-          (async function* (recordingId) {
-            const recording = cache.get(recordingId) as Recording
-            const chunkSize = config.transferChunkSize
-            for (let i = 0; i < recording.buffer.length; i += chunkSize) {
-              yield {
-                recorder: {
-                  id: recording.id
-                },
-                recording: {
-                  id: recording.id,
-                  startTime: Timestamp.fromDate(recording.startTime),
-                  endTime: Timestamp.fromDate(recording.endTime),
-                  buffer: recording.buffer.subarray(i, i + chunkSize)
-                }
-              }
-            }
-          })(recordingId)
+    queue = fastq.promise(async ({ recordingId, attempt }): Promise<void> => {
+      if (attempt > 0) {
+        const delay = config.workerQueueRetryDelay * Math.pow(2, attempt)
+        await new Promise(resolve =>
+          setTimeout(resolve, Math.min(delay, config.workerQueueRetryDelayMax)),
         )
-      },
-      1
-    )
+      }
+
+      logger.info({ recordingId, attempt }, 'processing recording')
+
+      await collectorService.collect(
+        (async function* (recordingId) {
+          const recording = cache.get(recordingId) as Recording
+          const chunkSize = config.transferChunkSize
+          for (let i = 0; i < recording.buffer.length; i += chunkSize) {
+            yield {
+              recorder: {
+                id: recording.id,
+              },
+              recording: {
+                id: recording.id,
+                startTime: Timestamp.fromDate(recording.startTime),
+                endTime: Timestamp.fromDate(recording.endTime),
+                buffer: recording.buffer.subarray(i, i + chunkSize),
+              },
+            }
+          }
+        })(recordingId),
+      )
+    }, 1)
 
     queue.error((error, { recordingId, attempt }) => {
       if (error && attempt <= config.workerQueueRetryAttemptsMax) {
