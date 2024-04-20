@@ -2,36 +2,35 @@ import mqtt from 'mqtt'
 
 import { Topics, TopicDefinitions } from './topics.js'
 
-export class MqttClient <PublishableTopics extends Topics> {
+export class MqttClient<PublishableTopics extends Topics> {
   protected enabled: boolean
   protected client: mqtt.MqttClient
   protected topicEncoder?: (topic: string) => string
 
-  constructor (
-    options: {
-      broker: string
-      enabled: boolean
-      topicEncoder?: (topic: string) => string
-    }
-  ) {
+  constructor(options: {
+    broker: string
+    enabled: boolean
+    topicEncoder?: (topic: string) => string
+  }) {
     this.enabled = options.enabled
     this.topicEncoder = options.topicEncoder
     this.client = mqtt.connect(options.broker, {
-      manualConnect: true
+      manualConnect: true,
     })
   }
 
-  private encodeTopic = (topic: string): string => {
-    return this.topicEncoder?.(topic) || topic
+  private encodeTopic = (topic: string, message: Record<string, any>): string => {
+    topic = this.topicEncoder?.(topic) || topic
+    return topic
   }
 
   private encodeMessage = (message: Record<string, any>): Buffer => {
     return Buffer.from(JSON.stringify(message), 'utf-8')
   }
 
-  public async publish <T extends PublishableTopics>(
+  public async publish<T extends PublishableTopics>(
     topic: T,
-    message: TopicDefinitions[T]
+    message: TopicDefinitions[T],
   ): Promise<void> {
     if (!this.enabled) {
       return
@@ -41,10 +40,7 @@ export class MqttClient <PublishableTopics extends Topics> {
       await this.client.connect()
     }
 
-    await this.client.publishAsync(
-      this.encodeTopic(topic),
-      this.encodeMessage(message)
-    )
+    await this.client.publishAsync(this.encodeTopic(topic, message), this.encodeMessage(message))
   }
 }
 
