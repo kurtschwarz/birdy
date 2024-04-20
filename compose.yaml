@@ -20,6 +20,7 @@ services:
       dockerfile: ./services/collector/Dockerfile
     command: >
       run dev --filter ./ --
+        --id dev-collector-01
         --mqtt-enabled
         --mqtt-broker http://mqtt.birdy.home.arpa:1883
         --kafka-enabled
@@ -54,7 +55,7 @@ services:
       dockerfile: ./services/recorder/Dockerfile
     command: >
       run dev --filter ./ --
-        --id dev-recorder
+        --id dev-recorder-01
         --mqtt-enabled
         --mqtt-broker http://mqtt.birdy.home.arpa:1883
     environment:

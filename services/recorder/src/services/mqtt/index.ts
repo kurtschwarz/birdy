@@ -8,5 +8,5 @@ const client = new MqttClient({
   topicEncoder: (topic: string): string => topic.replace(':recorderId', config.id)
 })
 
-export const publish = client.publish
+export const publish = client.publish.bind(client)
 export { Topic } from '@birdy/mqtt'

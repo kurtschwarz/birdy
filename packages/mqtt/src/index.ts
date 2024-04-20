@@ -3,9 +3,9 @@ import mqtt from 'mqtt'
 import { Topics, TopicDefinitions } from './topics.js'
 
 export class MqttClient <PublishableTopics extends Topics> {
-  protected readonly enabled: boolean
-  protected readonly client: mqtt.MqttClient
-  protected readonly topicEncoder?: (topic: string) => string
+  protected enabled: boolean
+  protected client: mqtt.MqttClient
+  protected topicEncoder?: (topic: string) => string
 
   constructor (
     options: {
@@ -15,6 +15,7 @@ export class MqttClient <PublishableTopics extends Topics> {
     }
   ) {
     this.enabled = options.enabled
+    this.topicEncoder = options.topicEncoder
     this.client = mqtt.connect(options.broker, {
       manualConnect: true
     })
