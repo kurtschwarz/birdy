@@ -42,10 +42,20 @@ To enable [MQTT](https://mqtt.org/) for `@birdy/recorder` you can use:
 
 ###### MQTT Topics
 
-| Topic                                       | Message                                           | Description                       |
-| ------------------------------------------- | -------------------------------------------------- | --------------------------------- |
-| `birdy/recorder/:recorderId/status/online`  | `{ "recorderId": "", "now": "current date/time" }` | The recorder has started running |
-| `birdy/recorder/:recorderId/status/offline` | `{ "recorderId": "", "now": "current date/time" }` | The recorder has shut down       |
+- `birdy/recorder/:recorderId/status/online` – The recorder service has started
+  ```json
+  {
+    "recorderId": "<id of the recorder>",
+    "now": "<current date/time>"
+  }
+  ```
+- `birdy/recorder/:recorderId/status/offline` – The recorder service has stopped
+  ```json
+  {
+    "recorderId": "<id of the recorder>",
+    "now": "<current date/time>"
+  }
+  ```
 
 #### [`@birdy/collector`](./services/collector)
 
@@ -81,10 +91,20 @@ To enable [MQTT](https://mqtt.org/) for `@birdy/collector` you can use:
 
 ###### MQTT Topics
 
-| Topic                            | Message                          | Description                       |
-| -------------------------------- | -------------------------------- | --------------------------------- |
-| `birdy/collector/status/online`  | `{ "now": "current date/time" }` | The collector has started running |
-| `birdy/collector/status/offline` | `{ "now": "current date/time" }` | The collector has shut down       |
+- `birdy/collector/:collectorId/status/online` – The collector service has started
+  ```json
+  {
+    "collectorId": "<id of the collector>",
+    "now": "<current date/time>"
+  }
+  ```
+- `birdy/collector/:collectorId/status/offline` – The collector service has stopped
+  ```json
+  {
+    "collectorId": "<id of the collector>",
+    "now": "<current date/time>"
+  }
+  ```
 
 #### [`@birdy/analyzer`](./services/analyzer)
 
