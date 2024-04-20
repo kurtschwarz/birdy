@@ -43,6 +43,7 @@ To enable [MQTT](https://mqtt.org/) for `@birdy/recorder` you can use:
 ###### MQTT Topics
 
 - `birdy/recorder/:recorderId/status/online` – The recorder service has started
+
   ```json
   {
     "recorderId": "<id of the recorder>",
@@ -50,6 +51,7 @@ To enable [MQTT](https://mqtt.org/) for `@birdy/recorder` you can use:
   }
   ```
 - `birdy/recorder/:recorderId/status/offline` – The recorder service has stopped
+
   ```json
   {
     "recorderId": "<id of the recorder>",
@@ -92,6 +94,7 @@ To enable [MQTT](https://mqtt.org/) for `@birdy/collector` you can use:
 ###### MQTT Topics
 
 - `birdy/collector/:collectorId/status/online` – The collector service has started
+
   ```json
   {
     "collectorId": "<id of the collector>",
@@ -99,6 +102,7 @@ To enable [MQTT](https://mqtt.org/) for `@birdy/collector` you can use:
   }
   ```
 - `birdy/collector/:collectorId/status/offline` – The collector service has stopped
+
   ```json
   {
     "collectorId": "<id of the collector>",
