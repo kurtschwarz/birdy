@@ -52,7 +52,7 @@ services:
         --mqtt-enabled
         --mqtt-broker http://mqtt.birdy.home.arpa:1883
         --kafka-enabled
-        --kafka-broker redpanda.birdy.home.arpa:9092
+        --kafka-brokers redpanda.birdy.home.arpa:9092
     environment:
       <<: [*minio-env]
       STORAGE_S3_ACCESS_KEY: *minio-collector-service-access-key

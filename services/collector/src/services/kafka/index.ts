@@ -41,7 +41,7 @@ const getProducer = async (): Promise<kafka.Producer> => {
   return producer
 }
 
-export const publish = async (topic: string, messages: any[]): Promise<void> => {
+export const publish = async (topic: string, messages: kafka.Message[]): Promise<void> => {
   if (!config.kafkaEnabled) {
     return
   }

@@ -4,6 +4,7 @@ import { CollectorService } from '@birdy/protos'
 
 import { client } from '../initializers/prisma.js'
 import { storeRecording } from '../services/storage/index.js'
+import * as kafka from '../services/kafka/index.js'
 
 export const initializeConnect = async (): Promise<(router: ConnectRouter) => ConnectRouter> => {
   return (router: ConnectRouter): ConnectRouter => {
@@ -58,6 +59,14 @@ export const initializeConnect = async (): Promise<(router: ConnectRouter) => Co
 
         for (const recordingId of Object.keys(recordings)) {
           await storeRecording(recordingId, Buffer.concat(recordings[recordingId].buffers))
+          await kafka.publish('queuing.recordings.unanalyzed', [
+            {
+              key: recordingId,
+              value: JSON.stringify({
+                recording: { id: recordingId },
+              }),
+            },
+          ])
         }
 
         return {
