@@ -6,58 +6,14 @@
 
 ## Architecture
 
-Birdy consists of a few independently scalable services:
-
 #### [`@birdy/recorder`](./services/recorder)
 
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 The `@birdy/recorder` service is responsible for collecting audio from a single microphone in a specific location.
 
-You should deploy as many `@birdy/recorder` services as you need.
-
-##### MQTT
-
-The `@birdy/recorder` service supports publishing and subscribing to messages/events via [MQTT](https://mqtt.org/).
-
-To enable [MQTT](https://mqtt.org/) for `@birdy/recorder` you can use:
-
-  - **Command Line Arguments**
-    ```
-    --mqtt-enabled
-    --mqtt-broker http://mqtt.birdy.home.arpa:1883
-    ```
-  - **Environmental Variables**
-    ```bash
-    MQTT_ENABLED=true
-    MQTT_BROKER=http://mqtt.birdy.home.arpa:1883
-    ```
-  - **JSON Config**
-    ```json
-    {
-      "mqttEnabled": true,
-      "mqttBroker": "http://mqtt.birdy.home.arpa:1883"
-    }
-    ```
-
-###### MQTT Topics
-
-- `birdy/recorder/:recorderId/status/online` – The recorder service has started
-
-  ```json
-  {
-    "recorderId": "<id of the recorder>",
-    "now": "<current date/time>"
-  }
-  ```
-- `birdy/recorder/:recorderId/status/offline` – The recorder service has stopped
-
-  ```json
-  {
-    "recorderId": "<id of the recorder>",
-    "now": "<current date/time>"
-  }
-  ```
+ - You should deploy as many `@birdy/recorder` services as you need.
+ - View the [📕 Recorder Service Docs](services/recorder/README.md) for details about features, configuration, deployment, etc.
 
 #### [`@birdy/collector`](./services/collector)
 
@@ -65,56 +21,16 @@ To enable [MQTT](https://mqtt.org/) for `@birdy/recorder` you can use:
 
 The `@birdy/collector` service is responsible for gathering the raw recordings produced by the `@birdy/recorder` services and storing them in [Minio](https://min.io/).
 
-You should only need to deploy a single `@birdy/collector` instance.
-
-##### MQTT
-
-The `@birdy/collector` service supports publishing and subscribing to messages/events via [MQTT](https://mqtt.org/).
-
-To enable [MQTT](https://mqtt.org/) for `@birdy/collector` you can use:
-
-  - **Command Line Arguments**
-    ```
-    --mqtt-enabled
-    --mqtt-broker http://mqtt.birdy.home.arpa:1883
-    ```
-  - **Environmental Variables**
-    ```bash
-    MQTT_ENABLED=true
-    MQTT_BROKER=http://mqtt.birdy.home.arpa:1883
-    ```
-  - **JSON Config**
-    ```json
-    {
-      "mqttEnabled": true,
-      "mqttBroker": "http://mqtt.birdy.home.arpa:1883"
-    }
-    ```
-
-###### MQTT Topics
-
-- `birdy/collector/:collectorId/status/online` – The collector service has started
-
-  ```json
-  {
-    "collectorId": "<id of the collector>",
-    "now": "<current date/time>"
-  }
-  ```
-- `birdy/collector/:collectorId/status/offline` – The collector service has stopped
-
-  ```json
-  {
-    "collectorId": "<id of the collector>",
-    "now": "<current date/time>"
-  }
-  ```
+ - You should only need to deploy a single `@birdy/collector` instance.
+ - View the [📕 Collector Service Docs](services/collector/README.md) for details about features, configuration, deployment, etc.
 
 #### [`@birdy/analyzer`](./services/analyzer)
 
 [![Python](https://img.shields.io/badge/%3C%2F%3E-Python-%230074c1.svg)](http://www.python.org/) [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 This is a future machine learning service that will use [BirdNET](https://github.com/kahst/BirdNET-Analyzer) to identify birds via the recordings recorded by `@birdy/recorder` and collected by `@birdy/collector`.
+
+ - View the [📕 Analyzer Service Docs](services/analyzer/README.md) for details about features, configuration, deployment, etc.
 
 #### [`@birdy/api`](./services/api)
 
