@@ -1,24 +1,12 @@
-x-minio-image: &minio-image
-  quay.io/minio/minio:RELEASE.2024-04-06T05-26-02Z@sha256:178e05aba3a0dc967df3558aab43097f1427bbcda77264fc24e92f1bf09dfe02
-
-x-minio-env: &minio-env
-  MINIO_UPDATE: off
-  MINIO_ENDPOINT: minio.birdy.home.arpa
-  MINIO_PORT: 9000
-  MINIO_ROOT_USER: birdy
-  MINIO_ROOT_PASSWORD: birdy123!
-
 services:
   minio:
-    image: *minio-image
+    image: quay.io/minio/minio:RELEASE.2024-04-06T05-26-02Z@sha256:178e05aba3a0dc967df3558aab43097f1427bbcda77264fc24e92f1bf09dfe02
     command: |
-      server minio.birdy.home.arpa/data
+      server /mnt/data
         --address ":9000"
         --console-address ":9001"
-    environment:
-      <<: *minio-env
     volumes:
-      - minio-data:/data
+      - minio-data:/mnt/data
     ports:
       - 127.0.0.1:9000:9000/tcp
       - 127.0.0.1:9001:9001/tcp
@@ -26,26 +14,43 @@ services:
       birdy-net:
         aliases:
           - minio.birdy.home.arpa
+    healthcheck:
+      test: mc ready local
+      interval: 5s
+      timeout: 5s
+      retries: 5
     restart: always
 
   minio-init:
-    image: *minio-image
+    image: quay.io/minio/minio:RELEASE.2024-04-06T05-26-02Z@sha256:178e05aba3a0dc967df3558aab43097f1427bbcda77264fc24e92f1bf09dfe02
     entrypoint: /bin/sh
     command: |
       -c '
-        /usr/bin/mc alias set birdy http://$$MINIO_ENDPOINT:$$MINIO_PORT $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD
-        /usr/bin/mc mb --ignore-existing birdy/birdy-recordings-unprocessed
-        /usr/bin/mc mb --ignore-existing birdy/birdy-recordings-processed
+        mc alias set birdy http://$$MINIO_ENDPOINT:$$MINIO_PORT $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD
+
+        # create the default buckets
+        mc mb --ignore-existing birdy/birdy-recordings-raw
+        mc mb --ignore-existing birdy/birdy-recordings-with-detections
+
+        # create the service users
+        mc admin user info birdy $${BIRDY_SERVICES_MINIO_ACCESS_KEY} || {
+          mc admin user add birdy $${BIRDY_SERVICES_MINIO_ACCESS_KEY} $${BIRDY_SERVICES_MINIO_SECRET_KEY}
+          mc admin policy attach birdy readwrite --user $${BIRDY_SERVICES_MINIO_ACCESS_KEY}
+          # create the birdy-collector service account
+          mc admin user svcacct add \
+            --name birdy-collector \
+            --access-key "$${BIRDY_COLLECTOR_MINIO_ACCESS_KEY}" \
+            --secret-key "$${BIRDY_COLLECTOR_MINIO_SECRET_KEY}" \
+              birdy $${BIRDY_SERVICES_MINIO_ACCESS_KEY}
+        }
       '
-    environment:
-      <<: *minio-env
     networks:
       birdy-net:
         aliases:
           - minio-init.service.docker
     depends_on:
       minio:
-        condition: service_started
+        condition: service_healthy
     restart: on-failure
 
 volumes:

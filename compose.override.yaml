@@ -1,0 +1,49 @@
+# !! WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !! This .overrides.yaml file should only be used for local development!                         !!
+# !! The credentials defined in this file are insecure (this file is public on Github after all). !!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+x-minio-env: &minio-env
+  MINIO_ENDPOINT: minio.birdy.home.arpa
+  MINIO_PORT: 9000
+
+x-minio-root-user: &minio-root-user
+  "birdy-admin"
+
+x-minio-root-password: &minio-root-password
+  "3fiJH8zv4hZN@ARceCC!Ezv3qstAnzNuPBT8Qy2Ldm.TuzBEedUdAQAjFxLiTV*h"
+
+x-minio-services-access-key: &minio-services-access-key
+  "birdy-services"
+
+x-minio-services-secret-key: &minio-services-secret-key
+  "n_fW8yhGnTY*avZWzdhbPZMzcLhkRfYZUHL6KMkJ"
+
+x-minio-collector-service-access-key: &minio-collector-service-access-key
+  "2R2L8Zsg-uH2BVX@-eZm"
+
+x-minio-collector-service-secret-key: &minio-collector-service-secret-key
+  "8_kano@!WCx!c2xhRPnoHB_ZxbM@EbAU8yCEYWet"
+
+services:
+  minio:
+    environment:
+      <<: [*minio-env]
+      MINIO_ROOT_USER: *minio-root-user
+      MINIO_ROOT_PASSWORD: *minio-root-password
+
+  minio-init:
+    environment:
+      <<: [*minio-env]
+      MINIO_ROOT_USER: *minio-root-user
+      MINIO_ROOT_PASSWORD: *minio-root-password
+      BIRDY_SERVICES_MINIO_ACCESS_KEY: *minio-services-access-key
+      BIRDY_SERVICES_MINIO_SECRET_KEY: *minio-services-secret-key
+      BIRDY_COLLECTOR_MINIO_ACCESS_KEY: *minio-collector-service-access-key
+      BIRDY_COLLECTOR_MINIO_SECRET_KEY: *minio-collector-service-secret-key
+
+  collector:
+    environment:
+      <<: [*minio-env]
+      MINIO_USER: *minio-collector-service-access-key
+      MINIO_PASSWORD: *minio-collector-service-secret-key
