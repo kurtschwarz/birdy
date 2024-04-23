@@ -18,16 +18,6 @@ services:
       target: dev
       context: ./
       dockerfile: ./services/collector/Dockerfile
-    command: >
-      run dev --filter ./ --
-        --id dev-collector-01
-        --storage s3
-        --storage-s3-endpoint http://minio.birdy.home.arpa:9000
-        --storage-s3-bucket birdy-recordings-raw
-        --mqtt-enabled
-        --mqtt-broker http://mqtt.birdy.home.arpa:1883
-        --kafka-enabled
-        --kafka-broker redpanda.birdy.home.arpa:9092
     environment:
       <<: [*node-env, *database-env]
     volumes:
@@ -39,7 +29,7 @@ services:
     networks:
       birdy-net:
         aliases:
-          - collector.service.docker
+          - collector.birdy.home.arpa
     depends_on:
       mqtt:
         condition: service_started
@@ -52,14 +42,8 @@ services:
       target: dev
       context: ./
       dockerfile: ./services/recorder/Dockerfile
-    command: >
-      run dev --filter ./ --
-        --id dev-recorder-01
-        --mqtt-enabled
-        --mqtt-broker http://mqtt.birdy.home.arpa:1883
     environment:
       <<: [*node-env]
-      COLLECTOR_SERVICE_ENDPOINT: http://collector.service.docker:3000
     volumes:
       - ./services/recorder/src/:/birdy/services/recorder/src/
       - type: tmpfs
@@ -67,7 +51,7 @@ services:
     networks:
       birdy-net:
         aliases:
-          - recorder.service.docker
+          - recorder.birdy.home.arpa
     depends_on:
       mqtt:
         condition: service_started
@@ -80,9 +64,6 @@ services:
       target: dev
       context: ./
       dockerfile: ./services/analyzer/Dockerfile
-    command: >
-      main.py
-        --config /birdy/services/analyzer/.config.json
     volumes:
       - ./services/analyzer/src/:/birdy/services/analyzer/src/
     ports:
@@ -90,7 +71,7 @@ services:
     networks:
       birdy-net:
         aliases:
-          - analyzer.service.docker
+          - analyzer.birdy.home.arpa
     restart: always
 
 networks:

@@ -6,7 +6,7 @@ import logging
 async def subscribe() -> None:
     async with aiomqtt.Client(
         identifier="analyzer",
-        hostname="mqtt.service.docker",
+        hostname="mqtt.birdy.home.arpa",
         port=1883,
         protocol=aiomqtt.ProtocolVersion.V5,
         clean_start=2,

@@ -43,7 +43,33 @@ services:
       BIRDY_COLLECTOR_MINIO_SECRET_KEY: *minio-collector-service-secret-key
 
   collector:
+    command: >
+      run dev --filter ./ --
+        --id dev-collector-01
+        --storage s3
+        --storage-s3-endpoint http://minio.birdy.home.arpa:9000
+        --storage-s3-bucket birdy-recordings-raw
+        --mqtt-enabled
+        --mqtt-broker http://mqtt.birdy.home.arpa:1883
+        --kafka-enabled
+        --kafka-broker redpanda.birdy.home.arpa:9092
     environment:
       <<: [*minio-env]
       STORAGE_S3_ACCESS_KEY: *minio-collector-service-access-key
       STORAGE_S3_SECRET_KEY: *minio-collector-service-secret-key
+
+  recorder:
+    command: >
+      run dev --filter ./ --
+        --id dev-recorder-01
+        --location-id dev-location-01
+        --location-lat 43.451637
+        --location-long -80.492531
+        --collector-endpoint http://collector.birdy.home.arpa:3000
+        --mqtt-enabled
+        --mqtt-broker http://mqtt.birdy.home.arpa:1883
+
+  analyzer:
+    command: >
+      main.py
+        --config /birdy/services/analyzer/.config.json

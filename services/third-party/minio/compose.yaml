@@ -47,7 +47,7 @@ services:
     networks:
       birdy-net:
         aliases:
-          - minio-init.service.docker
+          - minio-init.birdy.home.arpa
     depends_on:
       minio:
         condition: service_healthy

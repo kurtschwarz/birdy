@@ -3,42 +3,25 @@ import yargs from 'yargs'
 import { getArgvWithoutBin, BaseConfig } from '@birdy/config'
 
 const argvParser = yargs(getArgvWithoutBin())
-  .option('id', { string: true })
-  .option('log-level', {
-    string: true,
-    default: 'info',
-  })
-  .option('location-id', {
-    string: true,
-  })
-  .option('location-lat', {
-    string: true,
-  })
-  .option('location-long', {
-    string: true,
-  })
-  .option('recording-duration', {
-    number: true,
-    default: 15,
-  })
-  .option('transfer-chunk-size', {
-    number: true,
-    default: 512000, // 512kb
-  })
-  .option('worker-queue-retry-delay', {
-    number: true,
-    default: 200,
-  })
-  .option('worker-queue-retry-delay-max', {
-    number: true,
-    default: 5000, // 5 seconds
-  })
-  .option('worker-queue-retry-attempts-max', {
-    number: true,
-    default: 10,
-  })
-  .option('mqttEnabled', { boolean: true, default: false })
-  .option('mqttBroker', { string: true, default: null })
+  .option('id', { string: true, demandOption: true })
+  .option('log-level', { string: true, default: 'info' })
+  // location settings
+  .option('location-id', { string: true, demandOption: true })
+  .option('location-lat', { string: true, demandOption: true })
+  .option('location-long', { string: true, demandOption: true })
+  // recording settings
+  .option('recording-duration', { number: true, default: 15 })
+  // worker settings
+  .option('transfer-chunk-size', { number: true, default: 512000 })
+  .option('worker-queue-retry-delay', { number: true, default: 200 })
+  .option('worker-queue-retry-delay-max', { number: true, default: 5000 })
+  .option('worker-queue-retry-attempts-max', { number: true, default: 10 })
+  // collector settings
+  .option('collector-endpoint', { string: true })
+  // mqtt settings
+  .option('mqtt-enabled', { boolean: true, default: false })
+  .option('mqtt-broker', { string: true, default: null })
+  // inherit from process.env
   .env(true)
 
 class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.parseSync>> {
@@ -84,6 +67,10 @@ class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.
 
   get workerQueueRetryAttemptsMax(): number {
     return this.argv.workerQueueRetryAttemptsMax
+  }
+
+  get collectorEndpoint(): string {
+    return this.argv.collectorEndpoint
   }
 
   get mqttEnabled(): boolean {
