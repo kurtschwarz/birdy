@@ -21,6 +21,9 @@ services:
     command: >
       run dev --filter ./ --
         --id dev-collector-01
+        --storage s3
+        --storage-s3-endpoint http://minio.birdy.home.arpa:9000
+        --storage-s3-bucket birdy-recordings-raw
         --mqtt-enabled
         --mqtt-broker http://mqtt.birdy.home.arpa:1883
         --kafka-enabled

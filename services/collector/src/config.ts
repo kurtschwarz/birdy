@@ -5,13 +5,16 @@ import { getArgvWithoutBin, BaseConfig } from '@birdy/config'
 const argvParser = yargs(getArgvWithoutBin())
   .option('id', { string: true })
   .option('port', { number: true, default: 3000 })
-  .option('minioEndpoint', { string: true })
-  .option('minioPort', { number: true })
-  .option('minioUser', { string: true, alias: 'minioRootUser' })
-  .option('minioPassword', { string: true, alias: 'minioRootPassword' })
-  .option('storageBucketName', { string: true, default: 'birdy-recordings-unprocessed' })
+
+  .option('storage', { choices: ['s3'] })
+  .option('storageS3Endpoint', { string: true })
+  .option('storageS3AccessKey', { string: true })
+  .option('storageS3SecretKey', { string: true })
+  .option('storageS3Bucket', { string: true })
+
   .option('mqttEnabled', { boolean: true, default: false })
   .option('mqttBroker', { string: true, default: null })
+
   .option('kafkaEnabled', { boolean: true, default: false })
   .option('kafkaBrokers', { string: true, array: true, default: [] })
   .env(true)
@@ -29,24 +32,24 @@ class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.
     return this.argv.port
   }
 
-  get minioEndpoint(): string {
-    return this.argv.minioEndpoint
+  get storage(): string {
+    return this.argv.storage
   }
 
-  get minioPort(): number {
-    return this.argv.minioPort
+  get storageS3Endpoint(): string {
+    return this.argv.storageS3Endpoint
   }
 
-  get minioUser(): string {
-    return this.argv.minioUser
+  get storageS3AccessKey(): string {
+    return this.argv.storageS3AccessKey
   }
 
-  get minioPassword(): string {
-    return this.argv.minioPassword
+  get storageS3SecretKey(): string {
+    return this.argv.storageS3SecretKey
   }
 
-  get storageBucketName(): string {
-    return this.argv.storageBucketName
+  get storageS3Bucket(): string {
+    return this.argv.storageS3Bucket
   }
 
   get mqttEnabled(): boolean {
