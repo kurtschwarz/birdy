@@ -41,7 +41,11 @@ run *argv:
   #!/usr/bin/env bash
   set -exuo pipefail
 
-  {{compose}} up {{argv}}
+  if [[ "{{argv}}" = third-party ]] ; then
+    {{compose}} up minio minio-init redpanda redpanda-console mqtt
+  else
+    {{compose}} up {{argv}}
+  fi
 
 migrate *services='collector':
   #!/usr/bin/env bash
