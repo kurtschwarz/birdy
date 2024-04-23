@@ -9,7 +9,7 @@ import click
 from minio import Minio
 
 from service import AnalyzerService
-from subscriber import subscribe
+from consumer import consume
 
 sys.path.insert(0, "../../../packages/protos/gen/py")
 
@@ -34,7 +34,7 @@ async def start():
     logging.info("starting")
 
     loop = asyncio.get_event_loop()
-    task = loop.create_task(subscribe())
+    task = loop.create_task(consume())
     background_tasks.add(task)
     task.add_done_callback(background_tasks.remove)
 

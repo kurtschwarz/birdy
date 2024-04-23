@@ -48,7 +48,7 @@ services:
         --id dev-collector-01
         --storage s3
         --storage-s3-endpoint http://minio.birdy.home.arpa:9000
-        --storage-s3-bucket birdy-recordings-raw
+        --storage-s3-bucket birdy-recordings-unanalyzed
         --mqtt-enabled
         --mqtt-broker http://mqtt.birdy.home.arpa:1883
         --kafka-enabled
@@ -73,3 +73,7 @@ services:
     command: >
       main.py
         --config /birdy/services/analyzer/.config.json
+    environment:
+      <<: [*minio-env]
+      MINIO_ROOT_USER: *minio-root-user
+      MINIO_ROOT_PASSWORD: *minio-root-password

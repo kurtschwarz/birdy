@@ -29,8 +29,8 @@ services:
         mc alias set birdy http://$$MINIO_ENDPOINT:$$MINIO_PORT $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD
 
         # create the default buckets
-        mc mb --ignore-existing birdy/birdy-recordings-raw
-        mc mb --ignore-existing birdy/birdy-recordings-with-detections
+        mc mb --ignore-existing birdy/birdy-recordings-unanalyzed
+        mc mb --ignore-existing birdy/birdy-recordings-analyzed
 
         # create the service users
         mc admin user info birdy $${BIRDY_SERVICES_MINIO_ACCESS_KEY} || {
