@@ -3,15 +3,18 @@ import confluent_kafka
 from loguru import logger
 
 from birdy_analyzer.config import Config
+from birdy_analyzer.analyzer import Analyzer
 
 
 class Consumer:
     config: Config
+    analyzer: Analyzer
     topics: list[str]
     consumer: confluent_kafka.Consumer
 
-    def __init__(self, config: Config) -> None:
+    def __init__(self, config: Config, analyzer: Analyzer) -> None:
         self.config = config
+        self.analyzer = analyzer
 
     async def setup(self, topics: list[str], tasks: set[asyncio.Task]) -> None:
         self.topics = topics

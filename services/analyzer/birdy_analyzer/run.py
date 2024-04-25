@@ -3,9 +3,9 @@ import signal
 import asyncio
 import click
 
-from minio import Minio
 from loguru import logger
 
+from birdy_analyzer.analyzer import Analyzer
 from birdy_analyzer.config import Config
 from birdy_analyzer.kafka.consumer import Consumer
 from birdy_analyzer.grpc.server import Server
@@ -59,14 +59,16 @@ def main(**kwargs) -> None:
     )
 
     config = Config(**kwargs)
+
+    analyzer: Analyzer = Analyzer(config)
     consumer: Consumer | None = None
     server: Server | None = None
 
     if config.kafka_enabled:
-        consumer = Consumer(config)
+        consumer = Consumer(config=config, analyzer=analyzer)
 
     if config.grpc_enabled:
-        server = Server(config)
+        server = Server(config=config, analyzer=analyzer)
 
     async def _main() -> None:
         setup_signal_handlers()
