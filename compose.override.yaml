@@ -72,6 +72,10 @@ services:
   analyzer:
     command: >
       birdy_analyzer/run.py
+        --storage s3
+        --storage-s3-endpoint http://minio.birdy.home.arpa:9000
+        --storage-s3-bucket-unanalyzed birdy-recordings-unanalyzed
+        --storage-s3-bucket-analyzed birdy-recordings-analyzed
         --grpc-enabled
         --grpc-port 50051
         --kafka-enabled

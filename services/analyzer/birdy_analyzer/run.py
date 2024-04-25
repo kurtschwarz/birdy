@@ -45,6 +45,12 @@ def shutdown(sig: signal.Signals) -> None:
 
 @click.command()
 @click.option("--verbose", is_flag=True)
+@click.option("--storage", default="s3")
+@click.option("--storage-s3-endpoint")
+@click.option("--storage-s3-access-key")
+@click.option("--storage-s3-secret-key")
+@click.option("--storage-s3-bucket-unanalyzed")
+@click.option("--storage-s3-bucket-analyzed")
 @click.option("--kafka-enabled", is_flag=True)
 @click.option("--kafka-brokers", multiple=True, default=[])
 @click.option("--grpc-enabled", is_flag=True)
