@@ -1,6 +1,9 @@
 .DS_Store
+.pdm-python
 node_modules/
 __pycache__/
+.venv/
+.pdm-build/
 
 .turbo/
 
@@ -11,3 +14,4 @@ services/recorder/data/*
 !services/recorder/data/.gitkeep
 
 services/*/.config.json
+

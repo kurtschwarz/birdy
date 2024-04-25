@@ -12,5 +12,9 @@ docker-compose.yaml
 .github/
 node_modules/
 docs/
+__pycache__/
+.venv/
+.pdm-build/
 
 **/node_modules
+**/__pycache__

@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from analyzer.v1 import service_pb2 as analyzer_dot_v1_dot_service__pb2
+from birdy_protos.analyzer.v1 import service_pb2 as analyzer_dot_v1_dot_service__pb2
 
 
 class AnalyzerServiceStub(object):

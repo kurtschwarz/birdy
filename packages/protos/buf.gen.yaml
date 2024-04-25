@@ -4,11 +4,11 @@ managed:
 plugins:
   - plugin: es
     opt: target=ts
-    out: gen/ts
+    out: ./gen/ts/
   - plugin: buf.build/connectrpc/es:v1.4.0
     opt: target=ts
-    out: gen/ts
-  - plugin: buf.build/protocolbuffers/python
-    out: gen/py
+    out: ./gen/ts/
+  - plugin: buf.build/protocolbuffers/python:v26.1
+    out: ./gen/py/birdy_protos/
   - plugin: buf.build/grpc/python:v1.62.1
-    out: gen/py
+    out: ./gen/py/birdy_protos/

@@ -26,24 +26,29 @@ ENV TZ=UTC
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
       "ffmpeg=7:5.1.4*" && \
+    \
+    pip install -U \
+      pdm==2.15.0 && \
+    \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # -------------------------------------------------------------------------------------------------
 
-FROM base AS dependencies
+FROM base AS builder
 
-COPY ./services/${SERVICE_NAME}/requirements.txt /birdy/services/${SERVICE_NAME}/
-WORKDIR /birdy/services/${SERVICE_NAME}
-RUN pip install --no-cache-dir -r requirements.txt
+COPY ./services/${SERVICE_NAME}/pyproject.toml ./services/${SERVICE_NAME}/README.md /birdy/services/${SERVICE_NAME}/
+COPY ./packages/protos/gen/py/ /birdy/packages/protos/gen/py/
+COPY ./pdm.lock ./pyproject.toml /birdy/
+WORKDIR /birdy/
+RUN pdm install
 
 # -------------------------------------------------------------------------------------------------
 
 FROM base AS dev
 
-COPY --from=dependencies /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY ./services/${SERVICE_NAME}/src/ /birdy/services/${SERVICE_NAME}/src/
-COPY ./packages/protos/gen/py/ /birdy/packages/protos/gen/py/
-WORKDIR /birdy/services/${SERVICE_NAME}/src/
-ENTRYPOINT [ "python" ]
-CMD [ "main.py" ]
+COPY --from=builder /birdy/.venv/ /birdy/.venv/
+ENV PATH="/birdy/.venv/bin:$PATH"
+WORKDIR /birdy/services/${SERVICE_NAME}/
+ENTRYPOINT [ "/birdy/.venv/bin/python" ]
+CMD [ "birdy_analyzer/run.py" ]

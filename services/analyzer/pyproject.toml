@@ -1,0 +1,27 @@
+[project]
+name = "birdy_analyzer"
+version = "0.0.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Kurt Schwarz", email = "kurt@unkn.co"},
+]
+dependencies = [
+    "grpcio==1.62.1",
+    "protobuf==5.26.1",
+    "birdnetlib==0.16.0",
+    "minio==7.2.5",
+    "librosa==0.10.1",
+    "tflite-runtime==2.14.0",
+    "aiomqtt==2.0.1",
+    "click==8.1.7",
+    "confluent-kafka==2.3.0",
+    "loguru==0.7.2",
+    "birdy_protos @ file:///${PROJECT_ROOT}/../../packages/protos/gen/py/"
+]
+requires-python = "==3.11.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"

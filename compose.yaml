@@ -65,7 +65,8 @@ services:
       context: ./
       dockerfile: ./services/analyzer/Dockerfile
     volumes:
-      - ./services/analyzer/src/:/birdy/services/analyzer/src/
+      - ./services/analyzer/:/birdy/services/analyzer/
+      - ./packages/protos/:/birdy/packages/protos/
     ports:
       - 127.0.0.1:50051:50051/tcp
     networks:

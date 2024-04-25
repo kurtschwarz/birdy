@@ -1,0 +1,9 @@
+[project]
+dependencies = []
+requires-python = "==3.11.*"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "-e birdy_protos @ file:///${PROJECT_ROOT}/packages/protos/gen/py/",
+    "-e birdy_analyzer @ file:///${PROJECT_ROOT}/services/analyzer",
+]

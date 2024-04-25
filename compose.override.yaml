@@ -71,8 +71,11 @@ services:
 
   analyzer:
     command: >
-      main.py
-        --config /birdy/services/analyzer/.config.json
+      birdy_analyzer/run.py
+        --grpc-enabled
+        --grpc-port 50051
+        --kafka-enabled
+        --kafka-brokers redpanda.birdy.home.arpa:9092
     environment:
       <<: [*minio-env]
       MINIO_ROOT_USER: *minio-root-user

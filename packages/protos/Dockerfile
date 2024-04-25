@@ -44,4 +44,4 @@ RUN apk update && \
     python -m pip install \
       grpcio==1.62.1
 
-ENTRYPOINT [ "/usr/local/bin/buf" ]
+ENTRYPOINT [ "/bin/sh" ]

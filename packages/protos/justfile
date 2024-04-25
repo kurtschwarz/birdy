@@ -15,10 +15,9 @@ compile:
   #!/usr/bin/env bash
   set -exuo pipefail
 
-  rm -rf ./gen ||:
   {{docker}} build --progress=plain -t birdy/protos:latest .
   {{docker}} run -it --rm \
-    --volume "$(pwd):/workspace" \
-    --workdir /workspace \
+    --volume "$(pwd):/birdy" \
+    --workdir /birdy \
     birdy/protos:latest \
-      generate
+      -c '/usr/local/bin/buf generate && /usr/local/bin/node fix-paths.js'
