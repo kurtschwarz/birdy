@@ -67,6 +67,14 @@ create type service='collector' *args='':
         pnpm exec prisma migrate dev {{args}}
   fi
 
+clean:
+  #!/usr/bin/env bash
+  set -exuo pipefail
+
+  find . -name node_modules -type d -prune -exec rm -rf '{}' +
+  find . -name __pycache__ -type d -prune -exec rm -rf '{}' +
+  find . -name .pdm-build -type d -prune -exec rm -rf '{}' +
+
 # Local Variables:
 # mode: makefile
 # End:
