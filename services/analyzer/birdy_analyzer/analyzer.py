@@ -7,41 +7,45 @@ from urllib.parse import urlparse
 from birdnetlib import RecordingFileObject
 from birdnetlib.analyzer import Analyzer as BirdnetAnalyzer
 
+from birdy_analyzer.config import Config
 from birdy_analyzer.data.recording import Recording
 from birdy_analyzer.data.detection import Detection
-from birdy_analyzer.config import Config
+from birdy_analyzer.data.analyzer import AnalyzeResult
+from birdy_analyzer.kafka.producer import Producer
 
 
 class Analyzer:
-    config: Config
-    birdnet: BirdnetAnalyzer
-    storage: Minio | None
+    _config: Config
+    _birdnet: BirdnetAnalyzer
+    _producer: Producer | None
+    _storage: Minio | None
 
-    def __init__(self, config: Config) -> None:
-        self.config = config
-        self.birdnet = BirdnetAnalyzer()
-        self.storage = (
+    def __init__(self, config: Config, producer: Producer | None) -> None:
+        self._config = config
+        self._birdnet = BirdnetAnalyzer()
+        self._producer = producer
+        self._storage = (
             lambda storage_uri: Minio(
                 endpoint=storage_uri.netloc,
-                access_key=self.config.storage_s3_access_key,
-                secret_key=self.config.storage_s3_secret_key,
+                access_key=self._config.storage_s3_access_key,
+                secret_key=self._config.storage_s3_secret_key,
                 secure=storage_uri.scheme == "https",
             )
-        )(urlparse(self.config.storage_s3_endpoint))
+        )(urlparse(self._config.storage_s3_endpoint))
 
-    def analyzeRecording(self, recording: Recording) -> list[Detection]:
-        detections = []
+    async def analyzeRecording(self, recording: Recording) -> AnalyzeResult:
+        result = AnalyzeResult(recording=recording, detections=[])
         recording_file = None
 
         try:
-            recording_file = self.storage.get_object(
-                bucket_name=self.config.storage_s3_bucket_unanalyzed,
+            recording_file = self._storage.get_object(
+                bucket_name=self._config.storage_s3_bucket_unanalyzed,
                 object_name=recording.id,
             )
 
             with io.BytesIO(recording_file.read()) as recording_bytes:
                 birdnet_recording = RecordingFileObject(
-                    self.birdnet,
+                    self._birdnet,
                     recording_bytes,
                     lat=35.4244,
                     lon=-120.7463,
@@ -52,12 +56,19 @@ class Analyzer:
                 birdnet_recording.analyze()
 
                 for detection in birdnet_recording.detections:
-                    detections.append(
+                    result.detections.append(
                         Detection(
                             common_name=detection["common_name"],
                             scientific_name=detection["scientific_name"],
                             confidence=detection["confidence"],
                         )
+                    )
+
+                if self._producer != None:
+                    await self._producer.publish(
+                        topic="queuing.recordings.analyzed",
+                        key=recording.id,
+                        message="message",
                     )
         except Exception as e:
             logger.exception(e)
@@ -65,4 +76,4 @@ class Analyzer:
             recording_file.close()
             recording_file.release_conn()
 
-        return detections
+        return result

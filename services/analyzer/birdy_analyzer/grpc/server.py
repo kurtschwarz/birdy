@@ -10,33 +10,35 @@ from birdy_analyzer.grpc.service import Service
 
 
 class Server:
-    config: Config
-    analyzer: Analyzer
-    server: grpc.aio.Server
+    _config: Config
+    _analyzer: Analyzer
+    _server: grpc.aio.Server
 
     def __init__(self, config: Config, analyzer: Analyzer) -> None:
-        self.config = config
-        self.analyzer = analyzer
+        self._config = config
+        self._analyzer = analyzer
 
     async def setup(self) -> None:
-        self.server = grpc.aio.server()
-        self.server.add_insecure_port("[::]:{port}".format(port=self.config.grpc_port))
+        self._server = grpc.aio.server()
+        self._server.add_insecure_port(
+            "[::]:{port}".format(port=self._config.grpc_port)
+        )
 
         analyzer_pb2_grpc.add_AnalyzerServiceServicer_to_server(
-            Service(analyzer=self.analyzer), self.server
+            Service(analyzer=self._analyzer), self._server
         )
 
         logger.info(
-            f"starting grpc server on [::]:{self.config.grpc_port}",
-            port=self.config.grpc_port,
+            f"starting grpc server on [::]:{self._config.grpc_port}",
+            port=self._config.grpc_port,
         )
 
-        await self.server.start()
+        await self._server.start()
 
     async def run(self) -> None:
         logger.info(
-            f"grpc server running on [::]:{self.config.grpc_port}",
-            port=self.config.grpc_port,
+            f"grpc server running on [::]:{self._config.grpc_port}",
+            port=self._config.grpc_port,
         )
 
-        await self.server.wait_for_termination()
+        await self._server.wait_for_termination()

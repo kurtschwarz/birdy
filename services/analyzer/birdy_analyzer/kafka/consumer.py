@@ -7,33 +7,33 @@ from birdy_analyzer.analyzer import Analyzer
 
 
 class Consumer:
-    config: Config
-    analyzer: Analyzer
-    topics: list[str]
-    consumer: confluent_kafka.Consumer
+    _config: Config
+    _analyzer: Analyzer
+    _topics: list[str]
+    _consumer: confluent_kafka.Consumer
 
     def __init__(self, config: Config, analyzer: Analyzer) -> None:
-        self.config = config
-        self.analyzer = analyzer
+        self._config = config
+        self._analyzer = analyzer
 
     async def setup(self, topics: list[str], tasks: set[asyncio.Task]) -> None:
-        self.topics = topics
+        self._topics = topics
 
         logger.info(
             f"starting kafka consumer for topics: {', '.join(topics)}",
             topics=topics,
         )
 
-        self.consumer = confluent_kafka.Consumer(
+        self._consumer = confluent_kafka.Consumer(
             {
                 "group.id": "@birdy/analyzer",
-                "bootstrap.servers": ",".join(self.config.kafka_brokers),
+                "bootstrap.servers": ",".join(self._config.kafka_brokers),
                 "auto.offset.reset": "earliest",
                 "enable.auto.offset.store": False,
             },
         )
 
-        self.consumer.subscribe(topics)
+        self._consumer.subscribe(topics)
 
         loop = asyncio.get_running_loop()
         task = loop.create_task(self.consume())
@@ -42,19 +42,19 @@ class Consumer:
 
     async def consume(self) -> None:
         logger.info(
-            f"kafka consumer subscribed to topics: {', '.join(self.topics)}",
-            topics=self.topics,
+            f"kafka consumer subscribed to topics: {', '.join(self._topics)}",
+            topics=self._topics,
         )
 
         loop = asyncio.get_running_loop()
 
         try:
             while True:
-                message = await loop.run_in_executor(None, self.consumer.poll, 0.1)
+                message = await loop.run_in_executor(None, self._consumer.poll, 0.1)
                 if message is None:
                     continue
                 if message.error():
                     continue
-                self.consumer.store_offsets(message=message)
+                self._consumer.store_offsets(message=message)
         finally:
-            self.consumer.close()
+            self._consumer.close()

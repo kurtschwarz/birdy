@@ -9,11 +9,11 @@ import birdy_protos.analyzer.v1.service_pb2_grpc as analyzer_pb2_grpc
 
 
 class Service(analyzer_pb2_grpc.AnalyzerServiceServicer):
-    analyzer: Analyzer
+    _analyzer: Analyzer
 
     def __init__(self, analyzer: Analyzer) -> None:
         super().__init__()
-        self.analyzer = analyzer
+        self._analyzer = analyzer
 
     async def Analyze(
         self,
@@ -23,11 +23,11 @@ class Service(analyzer_pb2_grpc.AnalyzerServiceServicer):
         response = analyzer_pb2.AnalyzeResponse(status=analyzer_pb2.Status(code=0))
 
         try:
-            detections = self.analyzer.analyzeRecording(
+            result = await self._analyzer.analyzeRecording(
                 Recording.from_proto(request.recording)
             )
 
-            for detection in detections:
+            for detection in result.detections:
                 response.detections.append(detection.to_proto())
         except Exception as e:
             logger.exception(e)

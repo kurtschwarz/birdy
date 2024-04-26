@@ -8,6 +8,7 @@ from loguru import logger
 from birdy_analyzer.analyzer import Analyzer
 from birdy_analyzer.config import Config
 from birdy_analyzer.kafka.consumer import Consumer
+from birdy_analyzer.kafka.producer import Producer
 from birdy_analyzer.grpc.server import Server
 
 tasks = set()
@@ -66,12 +67,18 @@ def main(**kwargs) -> None:
 
     config = Config(**kwargs)
 
-    analyzer: Analyzer = Analyzer(config)
     consumer: Consumer | None = None
-    server: Server | None = None
+    producer: Producer | None = None
+
+    if config.kafka_enabled:
+        producer = Producer(config=config)
+
+    analyzer: Analyzer = Analyzer(config, producer=producer)
 
     if config.kafka_enabled:
         consumer = Consumer(config=config, analyzer=analyzer)
+
+    server: Server | None = None
 
     if config.grpc_enabled:
         server = Server(config=config, analyzer=analyzer)
@@ -81,6 +88,9 @@ def main(**kwargs) -> None:
 
         if consumer:
             await consumer.setup(["queuing.recordings.unanalyzed"], tasks)
+
+        if producer:
+            await producer.setup(tasks, loop=asyncio.get_running_loop())
 
         if server != None:
             await server.setup()
