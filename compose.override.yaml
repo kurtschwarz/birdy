@@ -82,5 +82,5 @@ services:
         --kafka-brokers redpanda.birdy.home.arpa:9092
     environment:
       <<: [*minio-env]
-      MINIO_ROOT_USER: *minio-root-user
-      MINIO_ROOT_PASSWORD: *minio-root-password
+      STORAGE_S3_ACCESS_KEY: *minio-collector-service-access-key
+      STORAGE_S3_SECRET_KEY: *minio-collector-service-secret-key
