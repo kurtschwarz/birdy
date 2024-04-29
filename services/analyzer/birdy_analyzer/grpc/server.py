@@ -1,3 +1,4 @@
+import asyncio
 import grpc
 from loguru import logger
 
@@ -41,4 +42,7 @@ class Server:
             port=self._config.grpc_port,
         )
 
-        await self._server.wait_for_termination()
+        try:
+            await self._server.wait_for_termination()
+        except asyncio.exceptions.CancelledError:
+            await self._server.stop(5)

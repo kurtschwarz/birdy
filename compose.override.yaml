@@ -80,6 +80,8 @@ services:
         --grpc-port 50051
         --kafka-enabled
         --kafka-brokers redpanda.birdy.home.arpa:9092
+        --mqtt-enabled
+        --mqtt-broker http://mqtt.birdy.home.arpa:1883
     environment:
       <<: [*minio-env]
       STORAGE_S3_ACCESS_KEY: *minio-collector-service-access-key

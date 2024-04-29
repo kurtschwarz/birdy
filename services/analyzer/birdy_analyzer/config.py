@@ -1,10 +1,14 @@
 class Config:
     verbose: bool
+
     kafka_enabled: bool
     kafka_brokers: list[str]
 
     grpc_enabled: bool
     grpc_port: int
+
+    mqtt_enabled: bool
+    mqtt_broker: str
 
     storage: str
     storage_s3_endpoint: str
