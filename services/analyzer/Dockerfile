@@ -38,6 +38,7 @@ RUN apt-get update && \
 FROM base AS builder
 
 COPY ./services/${SERVICE_NAME}/pyproject.toml ./services/${SERVICE_NAME}/README.md /birdy/services/${SERVICE_NAME}/
+COPY ./packages/mqtt/gen/py/ /birdy/packages/mqtt/gen/py/
 COPY ./packages/protos/gen/py/ /birdy/packages/protos/gen/py/
 COPY ./pdm.lock ./pyproject.toml /birdy/
 WORKDIR /birdy/

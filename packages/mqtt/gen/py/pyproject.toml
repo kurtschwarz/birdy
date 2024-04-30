@@ -1,0 +1,13 @@
+[project]
+name = "birdy_mqtt"
+version = "0.0.0"
+description = ""
+authors = [
+    {name = "Kurt Schwarz", email = "kurt@unkn.co"},
+]
+dependencies = []
+requires-python = "==3.11.*"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"

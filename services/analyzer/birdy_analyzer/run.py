@@ -15,6 +15,8 @@ from birdy_analyzer.grpc.servicer import GrpcServicer
 from birdy_analyzer.kafka.service import KafkaService
 from birdy_analyzer.kafka.consumers import QueuingRecordingsUnanalyzedConsumer
 
+from birdy_mqtt import AnalyzerTopic
+
 
 def setup_logger(level: str) -> None:
     logger.configure(
@@ -34,7 +36,7 @@ def setup_signal_handlers(mqtt: MqttService) -> None:
 
     async def _shutdown(sig: signal.Signals) -> None:
         await mqtt.publish(
-            "birdy/analyzer/status/offline",
+            AnalyzerTopic.ANALYZER_SERVICE_OFFLINE,
             dict(now=datetime.datetime.now(tz=datetime.UTC).isoformat()),
         )
 
@@ -49,31 +51,6 @@ def setup_signal_handlers(mqtt: MqttService) -> None:
 
     for sig in [signal.SIGINT, signal.SIGTERM]:
         loop.add_signal_handler(sig, lambda: asyncio.create_task(_shutdown(sig)))
-
-
-async def shutdown(
-    sig: signal.Signals,
-    loop: asyncio.AbstractEventLoop,
-    mqtt: MqttService,
-) -> None:
-    logger.info(f"Received exit signal {sig.name}")
-
-    await mqtt.publish(
-        "birdy/analyzer/status/offline",
-        dict(now=datetime.datetime.now(tz=datetime.UTC).isoformat()),
-    )
-
-    tasks = []
-    for task in asyncio.all_tasks(loop):
-        if task is not asyncio.current_task(loop):
-            task.cancel()
-            tasks.append(task)
-
-    results = await asyncio.gather(*tasks, return_exceptions=True)
-    logger.info(f"Cancelled {len(tasks)} task(s), results: {results}")
-    logger.info(f"Exiting")
-
-    loop.stop()
 
 
 @click.command()
@@ -113,7 +90,7 @@ def main(**kwargs) -> None:
             setup_signal_handlers(mqtt)
 
             await mqtt.publish(
-                "birdy/analyzer/status/online",
+                AnalyzerTopic.ANALYZER_SERVICE_ONLINE,
                 dict(now=datetime.datetime.now(tz=datetime.UTC).isoformat()),
             )
 

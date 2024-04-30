@@ -1,3 +1,16 @@
+// @birdy/analyzer topics
+export enum AnalyzerTopic {
+  // status topics
+  ANALYZER_SERVICE_ONLINE = 'birdy/analyzer/status/online',
+  ANALYZER_SERVICE_OFFLINE = 'birdy/analyzer/status/offline',
+}
+
+export type AnalyzerTopicDefinitions = {
+  // status topic definitions
+  [AnalyzerTopic.ANALYZER_SERVICE_ONLINE]: { now: Date }
+  [AnalyzerTopic.ANALYZER_SERVICE_OFFLINE]: { now: Date }
+}
+
 // @birdy/collector topics
 export enum CollectorTopic {
   // status topics
@@ -41,7 +54,9 @@ export type RecorderTopicDefinitions = {
 }
 
 // combined topics
-export const Topic = { ...CollectorTopic, ...RecorderTopic }
+export const Topic = { ...AnalyzerTopic, ...CollectorTopic, ...RecorderTopic }
 export type Topic = typeof Topic
 export type Topics = keyof TopicDefinitions
-export type TopicDefinitions = CollectorTopicDefinitions & RecorderTopicDefinitions
+export type TopicDefinitions = AnalyzerTopicDefinitions &
+  CollectorTopicDefinitions &
+  RecorderTopicDefinitions

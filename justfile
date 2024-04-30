@@ -26,6 +26,7 @@ codegen:
   set -exuo pipefail
 
   just ./packages/data/codegen
+  just ./packages/mqtt/codegen
   just ./packages/protos/codegen
 
 build *argv: (codegen)

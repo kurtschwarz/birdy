@@ -8,5 +8,8 @@
     "editor.formatOnSave": true
   },
   "python.autoComplete.extraPaths": ["packages/protos/gen/py"],
-  "python.analysis.extraPaths": ["packages/protos/gen/py"]
+  "python.analysis.extraPaths": [
+    "packages/protos/gen/py",
+    "./packages/mqtt/gen/py"
+  ]
 }

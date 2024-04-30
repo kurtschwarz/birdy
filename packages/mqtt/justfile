@@ -1,0 +1,27 @@
+#!/usr/bin/env just --justfile
+
+set shell := ["bash", "-exuo", "pipefail", "-c"]
+set export := true
+set dotenv-load := false
+set positional-arguments := true
+
+docker-bin  := `which docker ||:`
+docker-args := ""
+docker      := docker-bin + " " + docker-args
+
+codegen:
+  #!/usr/bin/env bash
+  set -exuo pipefail
+
+  cd ../../
+
+  PNPM_VERSION=$(jq -r '.devDependencies.pnpm' package.json)
+  TURBO_VERSION=$(jq -r '.devDependencies.turbo' package.json)
+
+  {{docker}} build \
+    --progress plain \
+    --file ./packages/mqtt/Dockerfile \
+    --build-arg PNPM_VERSION=${PNPM_VERSION} \
+    --build-arg TURBO_VERSION=${TURBO_VERSION} \
+    --output type=local,dest=./packages/mqtt/gen/ \
+    -t birdy/mqtt:codegen .
