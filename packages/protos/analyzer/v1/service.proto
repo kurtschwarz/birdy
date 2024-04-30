@@ -13,12 +13,16 @@ message Status {
 
 message Location {
   string id = 1;
-  string latitude = 2;
-  string longitude = 3;
+  float latitude = 2;
+  float longitude = 3;
 }
 
 message Recording {
   string id = 1;
+  float duration = 2;
+  google.protobuf.Timestamp start_time = 3;
+  google.protobuf.Timestamp end_time = 4;
+  string storage_uri = 5;
 }
 
 message Detection {

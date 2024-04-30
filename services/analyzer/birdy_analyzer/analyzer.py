@@ -9,6 +9,7 @@ from birdnetlib.analyzer import Analyzer as BirdnetAnalyzer
 
 from birdy_analyzer.config import Config
 from birdy_analyzer.data.recording import Recording
+from birdy_analyzer.data.location import Location
 from birdy_analyzer.data.detection import Detection
 from birdy_analyzer.data.analyzer import AnalyzeResult
 from birdy_analyzer.kafka.service import KafkaService
@@ -41,23 +42,27 @@ class Analyzer:
             )
         )(urlparse(self._config.storage_s3_endpoint))
 
-    async def analyzeRecording(self, recording: Recording) -> AnalyzeResult:
+    async def analyzeRecording(
+        self, recording: Recording, location: Location
+    ) -> AnalyzeResult:
         result = AnalyzeResult(recording=recording, detections=[])
-        recording_file = None
+        recording_file_handle = None
 
         try:
-            recording_file = self._storage.get_object(
-                bucket_name=self._config.storage_s3_bucket_unanalyzed,
-                object_name=recording.id,
+            parsed_storage_uri = urlparse(recording.storage_uri, allow_fragments=False)
+
+            recording_file_handle = self._storage.get_object(
+                bucket_name=parsed_storage_uri.netloc,
+                object_name=parsed_storage_uri.path,
             )
 
-            with io.BytesIO(recording_file.read()) as recording_bytes:
+            with io.BytesIO(recording_file_handle.read()) as recording_file_bytes:
                 birdnet_recording = RecordingFileObject(
                     self._birdnet,
-                    recording_bytes,
-                    lat=35.4244,
-                    lon=-120.7463,
-                    date=datetime(year=2023, month=6, day=27),
+                    file_obj=recording_file_bytes,
+                    lat=location.latitude,
+                    lon=location.longitude,
+                    date=recording.start_time.date(),
                     min_conf=0.25,
                 )
 
@@ -80,7 +85,7 @@ class Analyzer:
         except Exception as e:
             logger.exception(e)
         finally:
-            recording_file.close()
-            recording_file.release_conn()
+            recording_file_handle.close()
+            recording_file_handle.release_conn()
 
         return result

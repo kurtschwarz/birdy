@@ -6,6 +6,7 @@ import birdy_protos.analyzer.v1.service_pb2_grpc as analyzer_pb2_grpc
 
 from birdy_analyzer.analyzer import Analyzer
 from birdy_analyzer.data.recording import Recording
+from birdy_analyzer.data.location import Location
 
 
 class GrpcServicer(analyzer_pb2_grpc.AnalyzerServiceServicer):
@@ -24,7 +25,8 @@ class GrpcServicer(analyzer_pb2_grpc.AnalyzerServiceServicer):
 
         try:
             result = await self._analyzer.analyzeRecording(
-                Recording.from_proto(request.recording)
+                recording=Recording.from_proto(request.recording),
+                location=Location.from_proto(request.location),
             )
 
             for detection in result.detections:
