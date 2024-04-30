@@ -21,12 +21,16 @@ init:
 
   pre-commit install
 
-build *argv:
+codegen:
   #!/usr/bin/env bash
   set -exuo pipefail
 
-  just ./packages/data/build
-  just ./packages/protos/compile
+  just ./packages/data/codegen
+  just ./packages/protos/codegen
+
+build *argv: (codegen)
+  #!/usr/bin/env bash
+  set -exuo pipefail
 
   PNPM_VERSION=$(jq -r '.devDependencies.pnpm' package.json)
   TURBO_VERSION=$(jq -r '.devDependencies.turbo' package.json)

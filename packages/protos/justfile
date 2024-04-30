@@ -5,13 +5,11 @@ set export := true
 set dotenv-load := false
 set positional-arguments := true
 
-toolchain := "docker"
-
 docker-bin  := `which docker ||:`
 docker-args := ""
 docker      := docker-bin + " " + docker-args
 
-compile:
+codegen:
   #!/usr/bin/env bash
   set -exuo pipefail
 

@@ -5,7 +5,7 @@ set export := true
 set dotenv-load := false
 set positional-arguments := true
 
-build:
+codegen:
   #!/usr/bin/env bash
   set -exuo pipefail
 
