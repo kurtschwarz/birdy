@@ -1,4 +1,3 @@
-import functools
 import sys
 import signal
 import asyncio
@@ -6,15 +5,15 @@ import click
 import datetime
 
 from loguru import logger
+from contextlib import AsyncExitStack
 
 from birdy_analyzer.analyzer import Analyzer
 from birdy_analyzer.config import Config
-from birdy_analyzer.kafka.consumer import Consumer
-from birdy_analyzer.kafka.producer import Producer
-from birdy_analyzer.grpc.server import Server
 from birdy_analyzer.mqtt.service import MqttService
-
-background_tasks = set()
+from birdy_analyzer.grpc.service import GrpcService
+from birdy_analyzer.grpc.servicer import GrpcServicer
+from birdy_analyzer.kafka.service import KafkaService
+from birdy_analyzer.kafka.consumers import QueuingRecordingsUnanalyzedConsumer
 
 
 def setup_logger(level: str) -> None:
@@ -30,11 +29,11 @@ def setup_logger(level: str) -> None:
     )
 
 
-def setup_signal_handlers(mqttService: MqttService) -> None:
+def setup_signal_handlers(mqtt: MqttService) -> None:
     loop = asyncio.get_running_loop()
 
     async def _shutdown(sig: signal.Signals) -> None:
-        await mqttService.publish(
+        await mqtt.publish(
             "birdy/analyzer/status/offline",
             dict(now=datetime.datetime.now(tz=datetime.UTC).isoformat()),
         )
@@ -55,11 +54,11 @@ def setup_signal_handlers(mqttService: MqttService) -> None:
 async def shutdown(
     sig: signal.Signals,
     loop: asyncio.AbstractEventLoop,
-    mqttService: MqttService,
+    mqtt: MqttService,
 ) -> None:
     logger.info(f"Received exit signal {sig.name}")
 
-    await mqttService.publish(
+    await mqtt.publish(
         "birdy/analyzer/status/offline",
         dict(now=datetime.datetime.now(tz=datetime.UTC).isoformat()),
     )
@@ -103,45 +102,27 @@ def main(**kwargs) -> None:
 
     config = Config(**kwargs)
 
-    consumer: Consumer | None = None
-    producer: Producer | None = None
-
-    if config.kafka_enabled:
-        producer = Producer(config=config)
-
-    analyzer: Analyzer = Analyzer(config, producer=producer)
-
-    if config.kafka_enabled:
-        consumer = Consumer(config=config, analyzer=analyzer)
-
-    server: Server | None = None
-
-    if config.grpc_enabled:
-        server = Server(config=config, analyzer=analyzer)
-
     async def _main() -> None:
-        async with MqttService(config) as mqttService:
-            setup_signal_handlers(mqttService)
+        async with AsyncExitStack() as stack:
+            mqtt = await stack.enter_async_context(MqttService(config))
+            kafka = await stack.enter_async_context(KafkaService(config))
+            grpc = await stack.enter_async_context(GrpcService(config))
 
-            await mqttService.publish(
+            analyzer = Analyzer(config, mqtt=mqtt, kafka=kafka)
+
+            setup_signal_handlers(mqtt)
+
+            await mqtt.publish(
                 "birdy/analyzer/status/online",
                 dict(now=datetime.datetime.now(tz=datetime.UTC).isoformat()),
             )
 
-            if consumer:
-                await consumer.setup(
-                    ["queuing.recordings.unanalyzed"], background_tasks
-                )
+            await kafka.subscribe(
+                ["queuing.recordings.unanalyzed"],
+                consumer=QueuingRecordingsUnanalyzedConsumer(analyzer),
+            )
 
-            if producer:
-                await producer.setup(background_tasks, loop=asyncio.get_running_loop())
-
-            if server != None:
-                await server.setup()
-                await server.run()
-            else:
-                while True:
-                    await asyncio.sleep(1)
+            await grpc.listen(servicer=GrpcServicer(analyzer=analyzer))
 
     asyncio.run(_main())
 

@@ -11,19 +11,27 @@ from birdy_analyzer.config import Config
 from birdy_analyzer.data.recording import Recording
 from birdy_analyzer.data.detection import Detection
 from birdy_analyzer.data.analyzer import AnalyzeResult
-from birdy_analyzer.kafka.producer import Producer
+from birdy_analyzer.kafka.service import KafkaService
+from birdy_analyzer.mqtt.service import MqttService
 
 
 class Analyzer:
     _config: Config
     _birdnet: BirdnetAnalyzer
-    _producer: Producer | None
     _storage: Minio | None
+    _mqtt: MqttService | None
+    _kafka: KafkaService | None
 
-    def __init__(self, config: Config, producer: Producer | None) -> None:
+    def __init__(
+        self,
+        config: Config,
+        mqtt: MqttService | None = None,
+        kafka: KafkaService | None = None,
+    ) -> None:
         self._config = config
         self._birdnet = BirdnetAnalyzer()
-        self._producer = producer
+        self._mqtt = mqtt
+        self._kafka = kafka
         self._storage = (
             lambda storage_uri: Minio(
                 endpoint=storage_uri.netloc,
@@ -64,12 +72,11 @@ class Analyzer:
                         )
                     )
 
-                if self._producer != None:
-                    await self._producer.publish(
-                        topic="queuing.recordings.analyzed",
-                        key=recording.id,
-                        message="message",
-                    )
+                await self._kafka.publish(
+                    topic="queuing.recordings.analyzed",
+                    key=recording.id,
+                    message="message",
+                )
         except Exception as e:
             logger.exception(e)
         finally:
