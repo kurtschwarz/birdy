@@ -3,39 +3,13 @@ import grpc
 from types import TracebackType
 from typing import Self
 from loguru import logger
+from grpc_health.v1 import health
+from grpc_health.v1 import health_pb2_grpc
 
 from birdy_analyzer.config import Config
 
 import birdy_protos.analyzer.v1.service_pb2 as analyzer_pb2
 import birdy_protos.analyzer.v1.service_pb2_grpc as analyzer_pb2_grpc
-
-
-# class Service(analyzer_pb2_grpc.AnalyzerServiceServicer):
-#     _analyzer: Analyzer
-
-#     def __init__(self, analyzer: Analyzer) -> None:
-#         super().__init__()
-#         self._analyzer = analyzer
-
-#     async def Analyze(
-#         self,
-#         request: analyzer_pb2.AnalyzeRequest,
-#         context: grpc.aio.ServicerContext,
-#     ) -> analyzer_pb2.AnalyzeResponse:
-#         response = analyzer_pb2.AnalyzeResponse(status=analyzer_pb2.Status(code=0))
-
-#         try:
-#             result = await self._analyzer.analyzeRecording(
-#                 Recording.from_proto(request.recording)
-#             )
-
-#             for detection in result.detections:
-#                 response.detections.append(detection.to_proto())
-#         except Exception as e:
-#             logger.exception(e)
-#             response.status = analyzer_pb2.Status(code=1)
-
-#         return response
 
 
 class GrpcService:
@@ -78,6 +52,9 @@ class GrpcService:
         )
 
         analyzer_pb2_grpc.add_AnalyzerServiceServicer_to_server(servicer, self._server)
+        health_pb2_grpc.add_HealthServicer_to_server(
+            health.HealthServicer(), self._server
+        )
 
         await self._server.start()
 

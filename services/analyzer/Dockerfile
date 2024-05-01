@@ -30,6 +30,9 @@ RUN apt-get update && \
     pip install -U \
       pdm==2.15.0 && \
     \
+    wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.4.26/grpc_health_probe-linux-amd64 && \
+    chmod +x /bin/grpc_health_probe && \
+    \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
