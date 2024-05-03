@@ -18,8 +18,8 @@ message Recorder {
 
 message Location {
   string id = 1;
-  string latitude = 2;
-  string longitude = 3;
+  float latitude = 2;
+  float longitude = 3;
 }
 
 message Recording {
@@ -40,7 +40,8 @@ message RegisterResponse {
 
 message CollectRequest {
   Recorder recorder = 1;
-  Recording recording = 2;
+  Location location = 2;
+  Recording recording = 3;
 }
 
 message CollectResponse {

@@ -1,9 +1,11 @@
 from dataclasses import dataclass
+from dataclasses_json import dataclass_json, LetterCase
 
 import birdy_protos.analyzer.v1.service_pb2 as analyzer_pb2
 
 
-@dataclass
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass(frozen=True, init=True)
 class Detection:
     common_name: str
     scientific_name: str

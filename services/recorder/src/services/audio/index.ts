@@ -25,13 +25,15 @@ export const capture = async (options: { duration: number }): Promise<void> => {
     [
       '-hide_banner',
       '-loglevel',
-      'error',
+      'info',
       '-f',
       'pulse',
       '-server',
       'host.docker.internal',
       '-i',
       'default',
+      '-ac',
+      '2',
       '-f',
       'segment',
       '-segment_time',
@@ -56,6 +58,7 @@ export const capture = async (options: { duration: number }): Promise<void> => {
     },
   )
 
+  ffmpeg.stdout.on('data', data => console.log(data.toString('utf-8')))
   ffmpeg.stderr.on('data', data => console.error(data.toString('utf-8')))
 
   ffmpeg.on('exit', async (code, signal) => {
@@ -64,6 +67,7 @@ export const capture = async (options: { duration: number }): Promise<void> => {
 
   // this is called whenever the segment list is updated
   ffmpeg.stdio[3].on('data', async data => {
+    console.log(data.toString('utf-8'))
     const [fileName, startOffset, endOffset] = data.toString('utf-8').trim().split(',')
     const filePath = path.join('/birdy/services/recorder/data/', fileName)
     const startTime = dayjs(fileName.replace('.wav', ''), 'YYYY-MM-DD[T]HH-MM-SS')

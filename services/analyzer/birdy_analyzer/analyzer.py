@@ -11,7 +11,7 @@ from birdy_analyzer.config import Config
 from birdy_analyzer.data.recording import Recording
 from birdy_analyzer.data.location import Location
 from birdy_analyzer.data.detection import Detection
-from birdy_analyzer.data.analyzer import AnalyzeResult
+from birdy_analyzer.data.analyzer import AnalyzeRequest, AnalyzeResult
 from birdy_analyzer.kafka.service import KafkaService
 from birdy_analyzer.mqtt.service import MqttService
 
@@ -42,14 +42,16 @@ class Analyzer:
             )
         )(urlparse(self._config.storage_s3_endpoint))
 
-    async def analyzeRecording(
-        self, recording: Recording, location: Location
+    async def analyze(
+        self, request: AnalyzeRequest, collect: bool = True
     ) -> AnalyzeResult:
-        result = AnalyzeResult(recording=recording, detections=[])
+        result = AnalyzeResult(recording=request.recording, detections=[])
         recording_file_handle = None
 
         try:
-            parsed_storage_uri = urlparse(recording.storage_uri, allow_fragments=False)
+            parsed_storage_uri = urlparse(
+                request.recording.storage_uri, allow_fragments=False
+            )
 
             recording_file_handle = self._storage.get_object(
                 bucket_name=parsed_storage_uri.netloc,
@@ -60,9 +62,9 @@ class Analyzer:
                 birdnet_recording = RecordingFileObject(
                     self._birdnet,
                     file_obj=recording_file_bytes,
-                    lat=location.latitude,
-                    lon=location.longitude,
-                    date=recording.start_time.date(),
+                    lat=request.location.latitude,
+                    lon=request.location.longitude,
+                    date=request.recording.start_time.date(),
                     min_conf=0.25,
                 )
 
@@ -77,11 +79,12 @@ class Analyzer:
                         )
                     )
 
-                await self._kafka.publish(
-                    topic="queuing.recordings.analyzed",
-                    key=recording.id,
-                    message="message",
-                )
+                if collect:
+                    await self._kafka.publish(
+                        topic="queuing.recordings.analyzed",
+                        key=request.recording.id,
+                        message=result.to_json(),
+                    )
         except Exception as e:
             logger.exception(e)
         finally:

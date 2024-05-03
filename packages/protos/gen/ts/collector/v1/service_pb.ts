@@ -3,8 +3,15 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
-import { Any, Message, proto3, Timestamp } from "@bufbuild/protobuf";
+import type {
+  BinaryReadOptions,
+  FieldList,
+  JsonReadOptions,
+  JsonValue,
+  PartialMessage,
+  PlainMessage,
+} from '@bufbuild/protobuf'
+import { Any, Message, proto3, Timestamp } from '@bufbuild/protobuf'
 
 /**
  * @generated from message collector.v1.Status
@@ -13,45 +20,48 @@ export class Status extends Message<Status> {
   /**
    * @generated from field: int32 code = 1;
    */
-  code = 0;
+  code = 0
 
   /**
    * @generated from field: string message = 2;
    */
-  message = "";
+  message = ''
 
   /**
    * @generated from field: repeated google.protobuf.Any details = 3;
    */
-  details: Any[] = [];
+  details: Any[] = []
 
   constructor(data?: PartialMessage<Status>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "collector.v1.Status";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'collector.v1.Status'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "code", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
-    { no: 2, name: "message", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 3, name: "details", kind: "message", T: Any, repeated: true },
-  ]);
+    { no: 1, name: 'code', kind: 'scalar', T: 5 /* ScalarType.INT32 */ },
+    { no: 2, name: 'message', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: 'details', kind: 'message', T: Any, repeated: true },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Status {
-    return new Status().fromBinary(bytes, options);
+    return new Status().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): Status {
-    return new Status().fromJson(jsonValue, options);
+    return new Status().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): Status {
-    return new Status().fromJsonString(jsonString, options);
+    return new Status().fromJsonString(jsonString, options)
   }
 
-  static equals(a: Status | PlainMessage<Status> | undefined, b: Status | PlainMessage<Status> | undefined): boolean {
-    return proto3.util.equals(Status, a, b);
+  static equals(
+    a: Status | PlainMessage<Status> | undefined,
+    b: Status | PlainMessage<Status> | undefined,
+  ): boolean {
+    return proto3.util.equals(Status, a, b)
   }
 }
 
@@ -62,39 +72,42 @@ export class Recorder extends Message<Recorder> {
   /**
    * @generated from field: string id = 1;
    */
-  id = "";
+  id = ''
 
   /**
    * @generated from field: collector.v1.Location location = 4;
    */
-  location?: Location;
+  location?: Location
 
   constructor(data?: PartialMessage<Recorder>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "collector.v1.Recorder";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'collector.v1.Recorder'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 4, name: "location", kind: "message", T: Location },
-  ]);
+    { no: 1, name: 'id', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 4, name: 'location', kind: 'message', T: Location },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Recorder {
-    return new Recorder().fromBinary(bytes, options);
+    return new Recorder().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): Recorder {
-    return new Recorder().fromJson(jsonValue, options);
+    return new Recorder().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): Recorder {
-    return new Recorder().fromJsonString(jsonString, options);
+    return new Recorder().fromJsonString(jsonString, options)
   }
 
-  static equals(a: Recorder | PlainMessage<Recorder> | undefined, b: Recorder | PlainMessage<Recorder> | undefined): boolean {
-    return proto3.util.equals(Recorder, a, b);
+  static equals(
+    a: Recorder | PlainMessage<Recorder> | undefined,
+    b: Recorder | PlainMessage<Recorder> | undefined,
+  ): boolean {
+    return proto3.util.equals(Recorder, a, b)
   }
 }
 
@@ -105,45 +118,48 @@ export class Location extends Message<Location> {
   /**
    * @generated from field: string id = 1;
    */
-  id = "";
+  id = ''
 
   /**
-   * @generated from field: string latitude = 2;
+   * @generated from field: float latitude = 2;
    */
-  latitude = "";
+  latitude = 0
 
   /**
-   * @generated from field: string longitude = 3;
+   * @generated from field: float longitude = 3;
    */
-  longitude = "";
+  longitude = 0
 
   constructor(data?: PartialMessage<Location>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "collector.v1.Location";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'collector.v1.Location'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 2, name: "latitude", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 3, name: "longitude", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-  ]);
+    { no: 1, name: 'id', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: 'latitude', kind: 'scalar', T: 2 /* ScalarType.FLOAT */ },
+    { no: 3, name: 'longitude', kind: 'scalar', T: 2 /* ScalarType.FLOAT */ },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Location {
-    return new Location().fromBinary(bytes, options);
+    return new Location().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): Location {
-    return new Location().fromJson(jsonValue, options);
+    return new Location().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): Location {
-    return new Location().fromJsonString(jsonString, options);
+    return new Location().fromJsonString(jsonString, options)
   }
 
-  static equals(a: Location | PlainMessage<Location> | undefined, b: Location | PlainMessage<Location> | undefined): boolean {
-    return proto3.util.equals(Location, a, b);
+  static equals(
+    a: Location | PlainMessage<Location> | undefined,
+    b: Location | PlainMessage<Location> | undefined,
+  ): boolean {
+    return proto3.util.equals(Location, a, b)
   }
 }
 
@@ -154,51 +170,54 @@ export class Recording extends Message<Recording> {
   /**
    * @generated from field: string id = 1;
    */
-  id = "";
+  id = ''
 
   /**
    * @generated from field: google.protobuf.Timestamp startTime = 2;
    */
-  startTime?: Timestamp;
+  startTime?: Timestamp
 
   /**
    * @generated from field: google.protobuf.Timestamp endTime = 3;
    */
-  endTime?: Timestamp;
+  endTime?: Timestamp
 
   /**
    * @generated from field: bytes buffer = 4;
    */
-  buffer = new Uint8Array(0);
+  buffer = new Uint8Array(0)
 
   constructor(data?: PartialMessage<Recording>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "collector.v1.Recording";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'collector.v1.Recording'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 2, name: "startTime", kind: "message", T: Timestamp },
-    { no: 3, name: "endTime", kind: "message", T: Timestamp },
-    { no: 4, name: "buffer", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
-  ]);
+    { no: 1, name: 'id', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: 'startTime', kind: 'message', T: Timestamp },
+    { no: 3, name: 'endTime', kind: 'message', T: Timestamp },
+    { no: 4, name: 'buffer', kind: 'scalar', T: 12 /* ScalarType.BYTES */ },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Recording {
-    return new Recording().fromBinary(bytes, options);
+    return new Recording().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): Recording {
-    return new Recording().fromJson(jsonValue, options);
+    return new Recording().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): Recording {
-    return new Recording().fromJsonString(jsonString, options);
+    return new Recording().fromJsonString(jsonString, options)
   }
 
-  static equals(a: Recording | PlainMessage<Recording> | undefined, b: Recording | PlainMessage<Recording> | undefined): boolean {
-    return proto3.util.equals(Recording, a, b);
+  static equals(
+    a: Recording | PlainMessage<Recording> | undefined,
+    b: Recording | PlainMessage<Recording> | undefined,
+  ): boolean {
+    return proto3.util.equals(Recording, a, b)
   }
 }
 
@@ -209,39 +228,42 @@ export class RegisterRequest extends Message<RegisterRequest> {
   /**
    * @generated from field: collector.v1.Recorder recorder = 1;
    */
-  recorder?: Recorder;
+  recorder?: Recorder
 
   /**
    * @generated from field: collector.v1.Location location = 2;
    */
-  location?: Location;
+  location?: Location
 
   constructor(data?: PartialMessage<RegisterRequest>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "collector.v1.RegisterRequest";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'collector.v1.RegisterRequest'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "recorder", kind: "message", T: Recorder },
-    { no: 2, name: "location", kind: "message", T: Location },
-  ]);
+    { no: 1, name: 'recorder', kind: 'message', T: Recorder },
+    { no: 2, name: 'location', kind: 'message', T: Location },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RegisterRequest {
-    return new RegisterRequest().fromBinary(bytes, options);
+    return new RegisterRequest().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RegisterRequest {
-    return new RegisterRequest().fromJson(jsonValue, options);
+    return new RegisterRequest().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RegisterRequest {
-    return new RegisterRequest().fromJsonString(jsonString, options);
+    return new RegisterRequest().fromJsonString(jsonString, options)
   }
 
-  static equals(a: RegisterRequest | PlainMessage<RegisterRequest> | undefined, b: RegisterRequest | PlainMessage<RegisterRequest> | undefined): boolean {
-    return proto3.util.equals(RegisterRequest, a, b);
+  static equals(
+    a: RegisterRequest | PlainMessage<RegisterRequest> | undefined,
+    b: RegisterRequest | PlainMessage<RegisterRequest> | undefined,
+  ): boolean {
+    return proto3.util.equals(RegisterRequest, a, b)
   }
 }
 
@@ -252,33 +274,36 @@ export class RegisterResponse extends Message<RegisterResponse> {
   /**
    * @generated from field: collector.v1.Status status = 1;
    */
-  status?: Status;
+  status?: Status
 
   constructor(data?: PartialMessage<RegisterResponse>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "collector.v1.RegisterResponse";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'collector.v1.RegisterResponse'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "status", kind: "message", T: Status },
-  ]);
+    { no: 1, name: 'status', kind: 'message', T: Status },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RegisterResponse {
-    return new RegisterResponse().fromBinary(bytes, options);
+    return new RegisterResponse().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RegisterResponse {
-    return new RegisterResponse().fromJson(jsonValue, options);
+    return new RegisterResponse().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RegisterResponse {
-    return new RegisterResponse().fromJsonString(jsonString, options);
+    return new RegisterResponse().fromJsonString(jsonString, options)
   }
 
-  static equals(a: RegisterResponse | PlainMessage<RegisterResponse> | undefined, b: RegisterResponse | PlainMessage<RegisterResponse> | undefined): boolean {
-    return proto3.util.equals(RegisterResponse, a, b);
+  static equals(
+    a: RegisterResponse | PlainMessage<RegisterResponse> | undefined,
+    b: RegisterResponse | PlainMessage<RegisterResponse> | undefined,
+  ): boolean {
+    return proto3.util.equals(RegisterResponse, a, b)
   }
 }
 
@@ -289,39 +314,48 @@ export class CollectRequest extends Message<CollectRequest> {
   /**
    * @generated from field: collector.v1.Recorder recorder = 1;
    */
-  recorder?: Recorder;
+  recorder?: Recorder
 
   /**
-   * @generated from field: collector.v1.Recording recording = 2;
+   * @generated from field: collector.v1.Location location = 2;
    */
-  recording?: Recording;
+  location?: Location
+
+  /**
+   * @generated from field: collector.v1.Recording recording = 3;
+   */
+  recording?: Recording
 
   constructor(data?: PartialMessage<CollectRequest>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "collector.v1.CollectRequest";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'collector.v1.CollectRequest'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "recorder", kind: "message", T: Recorder },
-    { no: 2, name: "recording", kind: "message", T: Recording },
-  ]);
+    { no: 1, name: 'recorder', kind: 'message', T: Recorder },
+    { no: 2, name: 'location', kind: 'message', T: Location },
+    { no: 3, name: 'recording', kind: 'message', T: Recording },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CollectRequest {
-    return new CollectRequest().fromBinary(bytes, options);
+    return new CollectRequest().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CollectRequest {
-    return new CollectRequest().fromJson(jsonValue, options);
+    return new CollectRequest().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CollectRequest {
-    return new CollectRequest().fromJsonString(jsonString, options);
+    return new CollectRequest().fromJsonString(jsonString, options)
   }
 
-  static equals(a: CollectRequest | PlainMessage<CollectRequest> | undefined, b: CollectRequest | PlainMessage<CollectRequest> | undefined): boolean {
-    return proto3.util.equals(CollectRequest, a, b);
+  static equals(
+    a: CollectRequest | PlainMessage<CollectRequest> | undefined,
+    b: CollectRequest | PlainMessage<CollectRequest> | undefined,
+  ): boolean {
+    return proto3.util.equals(CollectRequest, a, b)
   }
 }
 
@@ -332,33 +366,35 @@ export class CollectResponse extends Message<CollectResponse> {
   /**
    * @generated from field: bool ok = 1;
    */
-  ok = false;
+  ok = false
 
   constructor(data?: PartialMessage<CollectResponse>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "collector.v1.CollectResponse";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'collector.v1.CollectResponse'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "ok", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
-  ]);
+    { no: 1, name: 'ok', kind: 'scalar', T: 8 /* ScalarType.BOOL */ },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CollectResponse {
-    return new CollectResponse().fromBinary(bytes, options);
+    return new CollectResponse().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CollectResponse {
-    return new CollectResponse().fromJson(jsonValue, options);
+    return new CollectResponse().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CollectResponse {
-    return new CollectResponse().fromJsonString(jsonString, options);
+    return new CollectResponse().fromJsonString(jsonString, options)
   }
 
-  static equals(a: CollectResponse | PlainMessage<CollectResponse> | undefined, b: CollectResponse | PlainMessage<CollectResponse> | undefined): boolean {
-    return proto3.util.equals(CollectResponse, a, b);
+  static equals(
+    a: CollectResponse | PlainMessage<CollectResponse> | undefined,
+    b: CollectResponse | PlainMessage<CollectResponse> | undefined,
+  ): boolean {
+    return proto3.util.equals(CollectResponse, a, b)
   }
 }
-

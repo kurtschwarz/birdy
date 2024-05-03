@@ -3,9 +3,6 @@ import confluent_kafka
 from types import TracebackType
 from typing import Self
 
-from loguru import logger
-
-
 from birdy_analyzer.config import Config
 
 
@@ -66,22 +63,7 @@ class KafkaService:
         if not self._config.kafka_enabled:
             return
 
-        result = self._loop.create_future()
-
-        def _ack(err, msg):
-            if err:
-                self._loop.call_soon_threadsafe(
-                    result.set_exception, confluent_kafka.KafkaException(err)
-                )
-            else:
-                self._loop.call_soon_threadsafe(result.set_result, msg)
-
-        self._producer.produce(topic, message, key, on_delivery=_ack)
-
-        try:
-            return await result
-        except asyncio.exceptions.CancelledError:
-            pass
+        self._producer.produce(topic, message, key)
 
     async def subscribe(self, topics: list[str], consumer: any) -> None:
         self._consumer.subscribe(topics)

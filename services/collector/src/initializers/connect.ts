@@ -45,25 +45,44 @@ export const initializeConnect = async (): Promise<(router: ConnectRouter) => Co
         }
       },
       async collect(requests) {
-        let recordings = {}
+        let chunks = {}
 
         for await (const request of requests) {
-          recordings[request.recording.id] = {
-            id: request.recording.id,
-            buffers: [
-              ...(recordings?.[request.recording.id]?.buffers || []),
-              request.recording.buffer,
-            ],
+          chunks[request.recording.id] = {
+            recorder: request.recorder,
+            location: request.location,
+            recording: {
+              ...request.recording,
+              buffers: [
+                ...(chunks?.[request.recording.id]?.buffers || []),
+                request.recording.buffer,
+              ],
+            },
           }
         }
 
-        for (const recordingId of Object.keys(recordings)) {
-          await storeRecording(recordingId, Buffer.concat(recordings[recordingId].buffers))
+        for (const recordingId of Object.keys(chunks)) {
+          const storageUri = await storeRecording(
+            recordingId,
+            Buffer.concat(chunks[recordingId].recording.buffers),
+          )
+
           await kafka.publish('queuing.recordings.unanalyzed', [
             {
               key: recordingId,
               value: JSON.stringify({
-                recording: { id: recordingId },
+                recording: {
+                  id: recordingId,
+                  duration: 15,
+                  startTime: chunks[recordingId].recording.startTime,
+                  endTime: chunks[recordingId].recording.endTime,
+                  storageUri: storageUri,
+                },
+                location: {
+                  id: chunks[recordingId].location.id,
+                  latitude: chunks[recordingId].location.latitude,
+                  longitude: chunks[recordingId].location.longitude,
+                },
               }),
             },
           ])

@@ -49,7 +49,7 @@ export const start = async (): Promise<void> => {
   }
 }
 
-export const enqueue = async (recording: Recording): Promise<void> => {
+export const enqueue = async (recording: Recording, location: Location): Promise<void> => {
   instance.postMessage({ recording })
 }
 
@@ -78,13 +78,20 @@ async function worker(): Promise<void> {
           for (let i = 0; i < recording.buffer.length; i += chunkSize) {
             yield {
               recorder: {
-                id: recording.id,
+                id: config.id,
               },
               recording: {
                 id: recording.id,
+                recorderId: config.id,
+                locationId: config.locationId,
                 startTime: Timestamp.fromDate(recording.startTime),
                 endTime: Timestamp.fromDate(recording.endTime),
                 buffer: recording.buffer.subarray(i, i + chunkSize),
+              },
+              location: {
+                id: config.locationId,
+                latitude: config.locationLat,
+                longitude: config.locationLong,
               },
             }
           }

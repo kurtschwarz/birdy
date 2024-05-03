@@ -24,7 +24,7 @@ class GrpcServicer(analyzer_pb2_grpc.AnalyzerServiceServicer):
         response = analyzer_pb2.AnalyzeResponse(status=analyzer_pb2.Status(code=0))
 
         try:
-            result = await self._analyzer.analyzeRecording(
+            result = await self._analyzer.analyze(
                 recording=Recording.from_proto(request.recording),
                 location=Location.from_proto(request.location),
             )

@@ -7,8 +7,8 @@ const argvParser = yargs(getArgvWithoutBin())
   .option('log-level', { string: true, default: 'info' })
   // location settings
   .option('location-id', { string: true, demandOption: true })
-  .option('location-lat', { string: true, demandOption: true })
-  .option('location-long', { string: true, demandOption: true })
+  .option('location-lat', { number: true, demandOption: true })
+  .option('location-long', { number: true, demandOption: true })
   // recording settings
   .option('recording-duration', { number: true, default: 15 })
   // worker settings
@@ -41,11 +41,11 @@ class Config extends BaseConfig<typeof argvParser, ReturnType<typeof argvParser.
     return this.argv.locationId
   }
 
-  get locationLat(): string {
+  get locationLat(): number {
     return this.argv.locationLat
   }
 
-  get locationLong(): string {
+  get locationLong(): number {
     return this.argv.locationLong
   }
 

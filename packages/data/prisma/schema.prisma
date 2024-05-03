@@ -18,8 +18,8 @@ model Recorder {
 
 model Location {
   id        String @id @default(uuid())
-  latitude  String
-  longitude String
+  latitude  Float
+  longitude Float
 
   recorders Recorder[]
 

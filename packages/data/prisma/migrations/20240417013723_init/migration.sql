@@ -8,6 +8,6 @@ CREATE TABLE "recorders" (
 -- CreateTable
 CREATE TABLE "locations" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "latitude" TEXT NOT NULL,
-    "longitude" TEXT NOT NULL
+    "latitude" REAL NOT NULL,
+    "longitude" REAL NOT NULL
 );

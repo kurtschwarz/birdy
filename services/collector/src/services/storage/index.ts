@@ -13,6 +13,7 @@ const minio =
       })
     : null
 
-export const storeRecording = async (id: string, buffer: Buffer): Promise<void> => {
+export const storeRecording = async (id: string, buffer: Buffer): Promise<string> => {
   await minio.putObject(config.storageS3Bucket, `${id}.wav`, buffer)
+  return `s3://${config.storageS3Bucket}/${id}.wav`
 }
